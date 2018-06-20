@@ -535,7 +535,7 @@ void TokenDispatchApply(size_t count,
         dispatch_group_async(group, queue, ^{
             size_t i;
             while ((i = atomic_fetch_add(&counter, 1)) < count) {
-                work(i);
+                @autoreleasepool{work(i);}
             }
         });
     }
