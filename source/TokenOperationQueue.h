@@ -84,9 +84,9 @@ example:
 -(void)cancelAllOperations;
 @end
 
-typedef TokenOperationQueue * (^TokenOperationChain0Block) (void);
-typedef TokenOperationQueue * (^TokenOperationChain1Block) (dispatch_block_t operation);
-typedef TokenOperationQueue * (^TokenOperationChain2Block) (TokenQueuePriority priority,dispatch_block_t operation);
+typedef TokenOperationQueue* (^TokenOperationChain0Block) (void);
+typedef TokenOperationQueue* (^TokenOperationChain1Block) (dispatch_block_t operation);
+typedef TokenOperationQueue* (^TokenOperationChain2Block) (TokenQueuePriority priority,dispatch_block_t operation);
 typedef TokenOperationQueue * (^TokenOperationIntegerBlock)(NSUInteger maxConcurrent);
 
 @interface TokenOperationQueue(Chain)
@@ -129,14 +129,30 @@ typedef TokenOperationQueue * (^TokenOperationIntegerBlock)(NSUInteger maxConcur
 -(void)setCompletion:(dispatch_block_t)completion;
 @end
 
-typedef TokenOperationGroup * (^TokenOperationGroupChain0Block) (void);
-typedef TokenOperationGroup * (^TokenOperationGroupChain1Block) (dispatch_block_t operation);
-typedef TokenOperationGroup * (^TokenOperationGroupChain2Block) (TokenQueuePriority priority,dispatch_block_t operation);
+typedef TokenOperationGroup* (^TokenOperationGroupChain0Block) (void);
+typedef TokenOperationGroup* (^TokenOperationGroupChain1Block) (dispatch_block_t operation);
+typedef TokenOperationGroup* (^TokenOperationGroupChain2Block) (TokenQueuePriority priority,dispatch_block_t operation);
 
 @interface TokenOperationGroup(Chain)
-@property(nonatomic ,copy ,readonly) TokenOperationGroupChain1Block chain_addOperation;
-@property(nonatomic ,copy ,readonly) TokenOperationGroupChain2Block chain_addOperationWithPriority;
-@property(nonatomic ,copy ,readonly) TokenOperationGroupChain1Block chain_setCompletion;
-@property(nonatomic ,copy ,readonly) TokenOperationGroupChain0Block chain_run;
-@property(nonatomic ,copy ,readonly) dispatch_block_t               chain_cancel;
+@property(nonatomic, copy, readonly) TokenOperationGroupChain1Block chain_addOperation;
+@property(nonatomic, copy, readonly) TokenOperationGroupChain2Block chain_addOperationWithPriority;
+@property(nonatomic, copy, readonly) TokenOperationGroupChain1Block chain_setCompletion;
+@property(nonatomic, copy, readonly) TokenOperationGroupChain0Block chain_run;
+@property(nonatomic, copy, readonly) dispatch_block_t               chain_cancel;
+@end
+
+@interface TokenSemaphore : NSObject
+
+/**
+ 初始化信号量为0
+ */
++(instancetype)waitSemaphore;
+
+/**
+ 初始化信号量为1
+ */
+
++(instancetype)lockSemaphore;
+-(void)wait;
+-(void)signal;
 @end

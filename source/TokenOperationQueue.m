@@ -541,3 +541,36 @@ void TokenDispatchApply(size_t count,
     }
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 };
+
+
+@interface TokenSemaphore()
+@property(nonatomic ,strong) dispatch_semaphore_t semaphore;
+@end
+
+@implementation TokenSemaphore
+
++(instancetype)waitSemaphore{
+    return [[self alloc] initWithCount:0];
+}
+
++(instancetype)lockSemaphore{
+    return [[self alloc] initWithCount:1];
+}
+
+- (instancetype)initWithCount:(NSInteger)count
+{
+    self = [super init];
+    if (self) {
+        _semaphore = dispatch_semaphore_create(count);
+    }
+    return self;
+}
+
+-(void)wait{
+    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
+}
+
+-(void)signal{
+    dispatch_semaphore_signal(self.semaphore);
+}
+@end
