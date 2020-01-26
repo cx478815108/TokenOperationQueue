@@ -63,14 +63,6 @@
     pthread_mutex_destroy(&_mutexLock);
 }
 
--(void)lock{
-    pthread_mutex_lock(&_mutexLock);
-}
-
--(void)unlock{
-    pthread_mutex_unlock(&_mutexLock);
-}
-
 -(void)runOperation:(dispatch_block_t _Nullable)operation{
     [self runOperation:operation withPriority:TokenQueuePriorityDefault];
 }
@@ -88,7 +80,7 @@
             NSMutableArray *operationsArray = [self operationsWithPriority:priority];
             [operationsArray addObject:operation];
         [self unlock];
-        /// 任务添加完就需要开始走执行流程，不要让外面调用所谓的start或者begin
+        /// 任务添加完就需要取出一个任务开始执行，但是不一定就是执行刚刚添加的任务
         [self execute];
     });
 }
@@ -162,7 +154,7 @@
     }
 }
 
-/// 执行任务
+/// 尝试取出队列中的一个任务并且执行
 - (void)execute {
     [self lock];
         NSUInteger maxConcurrent = self.maxConcurrent;
@@ -251,6 +243,16 @@
             }
         }
     });
+}
+
+#pragma mark - lock
+
+- (void)lock {
+    pthread_mutex_lock(&_mutexLock);
+}
+
+- (void)unlock {
+    pthread_mutex_unlock(&_mutexLock);
 }
 
 #pragma mark - getter
