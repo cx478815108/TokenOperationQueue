@@ -14,7 +14,7 @@
 /// 多线程读写保护专用锁
 @property (nonatomic, assign) pthread_mutex_t mutexLock;
 
-/// 真正串/并行执行任务的队列
+/// 真正串/并行执行任务的队列，串行队列职责多一些
 @property (nonatomic, copy, nonnull) dispatch_queue_t serialQueue;
 @property (nonatomic, copy, nonnull) dispatch_queue_t concurrentQueue;
 /// 所有任务执行必须进组，任务完成出组，为waitUntilFinished服务，可以阻塞当前线程
@@ -27,14 +27,12 @@
 @property (nonatomic, strong, nonnull) NSMutableArray <dispatch_block_t> *backgroundOperations;
 /// 控制最大并发数的信号量，所有的当_maxConcurrent大于1时的任务是否可以执行都需要通过该信号量控制
 @property (nonatomic, copy, nonnull) dispatch_semaphore_t maxConcurrentSemaphore;
-
+/// 队列优先级flag，用于调整任务执行优先级
 @property (nonatomic, assign) TokenQueuePriority lastPriorityState;
 
 @end
 
-@implementation TokenOperationQueue {
-    NSUInteger _maxConcurrent;
-}
+@implementation TokenOperationQueue
 
 +(instancetype)sharedQueue{
     static TokenOperationQueue *obj;
@@ -56,7 +54,7 @@
         /// 设置最大并发量
         _maxConcurrent = maxConcurrent;
         /// 初始化控制最大并发数的信号量
-        _maxConcurrentSemaphore = dispatch_semaphore_create(_maxConcurrent);
+        _maxConcurrentSemaphore = dispatch_semaphore_create(maxConcurrent);
     }
     return self;
 }
@@ -73,7 +71,7 @@
     pthread_mutex_unlock(&_mutexLock);
 }
 
--(void)runOperation:(dispatch_block_t)operation{
+-(void)runOperation:(dispatch_block_t _Nullable)operation{
     [self runOperation:operation withPriority:TokenQueuePriorityDefault];
 }
 
@@ -95,17 +93,19 @@
     });
 }
 
--(dispatch_block_t)locked_popOperation{
+/// 按照优先级取出应该执行的任务，并且调整队列优先级
+- (dispatch_block_t _Nullable)locked_popOperation {
     [self lock];
         dispatch_block_t operation = [self.highOperations firstObject];
         if (operation) {
+            /// 取到高优先级任务，设置队列优先级为高，pop任务
             if (self.lastPriorityState != TokenQueuePriorityHigh) {
                 dispatch_set_target_queue(self.concurrentQueue, dispatch_get_global_queue(TokenQueuePriorityHigh, 0));
             }
             self.lastPriorityState = TokenQueuePriorityHigh;
             [self.highOperations removeObjectAtIndex:0];
-        }
-        else if (operation == nil) {
+        } else {
+            /// 没取到对应的，尝试取默认优先级
             operation = [self.defaultOperations firstObject];
             if (operation) {
                 if (self.lastPriorityState != TokenQueuePriorityDefault) {
@@ -115,9 +115,11 @@
                 [self.defaultOperations removeObjectAtIndex:0];
             }
         }
-        if (operation == nil) {
+        if (!operation) {
+            /// 高优和默认优先都取不到
             operation = [self.lowOperations firstObject];
             if (operation) {
+                /// 取到低优
                 if (self.lastPriorityState != TokenQueuePriorityLow) {
                     dispatch_set_target_queue(self.concurrentQueue, dispatch_get_global_queue(TokenQueuePriorityLow, 0));
                 }
@@ -125,9 +127,11 @@
                 [self.lowOperations removeObjectAtIndex:0];
             }
         }
-        if (operation == nil) {
+        if (!operation) {
+            /// 默认优先级也没取到
             operation = [self.backgroundOperations firstObject];
             if (operation) {
+                /// 取到后台优先级
                 if (self.lastPriorityState != TokenQueuePriorityBackground) {
                     dispatch_set_target_queue(self.concurrentQueue, dispatch_get_global_queue(TokenQueuePriorityBackground, 0));
                 }
@@ -137,12 +141,13 @@
         }
     
     [self unlock];
+    /// 可能一个都取不到
     return operation;
 }
 
 /// 取出对应级别的存放任务的数组
 /// @param priority 级别
--(NSMutableArray * _Nonnull)operationsWithPriority:(TokenQueuePriority)priority{
+- (NSMutableArray * _Nonnull)operationsWithPriority:(TokenQueuePriority)priority {
     switch (priority) {
         case TokenQueuePriorityDefault:
             return self.defaultOperations;
@@ -160,7 +165,7 @@
 /// 执行任务
 - (void)execute {
     [self lock];
-        NSUInteger maxConcurrent = _maxConcurrent;
+        NSUInteger maxConcurrent = self.maxConcurrent;
     [self unlock];
 
     /// 开发者设置串行执行
@@ -214,7 +219,7 @@
         [self.lowOperations        removeAllObjects];
         [self.backgroundOperations removeAllObjects];
         /// 取消所有任务，需要计算没被执行的任务，进行对应次数的出组，保证不会阻塞当前线程，导致waitUntilFinished无法返回
-        while (operationsCount!=0) {
+        while (operationsCount != 0) {
             dispatch_group_leave(self.operationsGroup);
             operationsCount -= 1;
         }
@@ -222,9 +227,11 @@
 }
 
 #pragma mark - setter
+
 - (void)setMaxConcurrent:(NSUInteger)maxConcurrent {
     [self lock];
-        __block NSInteger diff = _maxConcurrent - maxConcurrent;
+        __block NSInteger diff = self.maxConcurrent - maxConcurrent;
+        /// 下面这一行不要写self.maxConcurrent = maxConcurrent; 会出事的
         _maxConcurrent = maxConcurrent;
     [self unlock];
     if (diff == 0) {

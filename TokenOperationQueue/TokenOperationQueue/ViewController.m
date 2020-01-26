@@ -68,4 +68,47 @@
     }];
     [TokenOperationQueue.sharedQueue waitUntilFinished];
 }
+
+- (void)functionOne {
+    NSBlockOperation *blockOp = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"1");
+    }];
+    [blockOp addExecutionBlock:^{
+        NSLog(@"2");
+    }];
+    [blockOp addExecutionBlock:^{
+        NSLog(@"3");
+    }];
+    [blockOp addExecutionBlock:^{
+        NSLog(@"4");
+    }];
+    [blockOp addExecutionBlock:^{
+        NSLog(@"5");
+    }];
+    [blockOp start];
+}
+
+- (void)functionTwo {
+    NSBlockOperation *op1 = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"1");
+    }];
+    NSBlockOperation *op2 = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"2");
+    }];
+    NSBlockOperation *op3 = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"3");
+    }];
+    NSBlockOperation *op4 = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"4");
+    }];
+    NSBlockOperation *op5 = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"5");
+    }];
+    NSBlockOperation *op6 = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"6");
+    }];
+    NSOperationQueue *queue = NSOperationQueue.mainQueue;
+    [queue addOperations:@[op1, op2, op3, op4, op5, op6] waitUntilFinished:YES];
+    NSLog(@"all down");
+}
 @end
