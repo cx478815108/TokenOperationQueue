@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC9B394323DC96810083F2F0 /* TokenSemaphore.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9B394223DC96810083F2F0 /* TokenSemaphore.m */; };
+		BC9B3BAE23DC982F0083F2F0 /* TokenOperationTool.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9B3BAD23DC982F0083F2F0 /* TokenOperationTool.m */; };
+		BC9B3BB123DC98FC0083F2F0 /* TokenRenderQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9B3BB023DC98FC0083F2F0 /* TokenRenderQueue.m */; };
+		BC9B3BB323DC9A4D0083F2F0 /* TokenOperationQueueDocument.md in Resources */ = {isa = PBXBuildFile; fileRef = BC9B3BB223DC9A4D0083F2F0 /* TokenOperationQueueDocument.md */; };
+		BC9B3BB623DC9EB80083F2F0 /* TokenOperationGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9B3BB523DC9EB80083F2F0 /* TokenOperationGroup.m */; };
 		BCB2DFB022D2400600786463 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB2DFAF22D2400600786463 /* AppDelegate.m */; };
 		BCB2DFB322D2400600786463 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB2DFB222D2400600786463 /* ViewController.m */; };
 		BCB2DFB622D2400600786463 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BCB2DFB422D2400600786463 /* Main.storyboard */; };
@@ -14,9 +19,21 @@
 		BCB2DFBE22D2400700786463 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB2DFBD22D2400700786463 /* main.m */; };
 		BCB2DFC922D2407500786463 /* TokenOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB2DFC822D2407500786463 /* TokenOperationQueue.m */; };
 		BCB2DFCB22D240A900786463 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BCB2DFCA22D240A900786463 /* LaunchScreen.storyboard */; };
+		BCFABD9E23DC9FEB00FC88CB /* TokenOperationGroup+Chain.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFABD9D23DC9FEB00FC88CB /* TokenOperationGroup+Chain.m */; };
+		BCFABDA123DCA0D900FC88CB /* TokenOperationQueue+Chain.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFABDA023DCA0D900FC88CB /* TokenOperationQueue+Chain.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BC9B394123DC96810083F2F0 /* TokenSemaphore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenSemaphore.h; sourceTree = "<group>"; };
+		BC9B394223DC96810083F2F0 /* TokenSemaphore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenSemaphore.m; sourceTree = "<group>"; };
+		BC9B394423DC97030083F2F0 /* TokenOperationHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenOperationHeader.h; sourceTree = "<group>"; };
+		BC9B3BAC23DC982F0083F2F0 /* TokenOperationTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenOperationTool.h; sourceTree = "<group>"; };
+		BC9B3BAD23DC982F0083F2F0 /* TokenOperationTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenOperationTool.m; sourceTree = "<group>"; };
+		BC9B3BAF23DC98FC0083F2F0 /* TokenRenderQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenRenderQueue.h; sourceTree = "<group>"; };
+		BC9B3BB023DC98FC0083F2F0 /* TokenRenderQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenRenderQueue.m; sourceTree = "<group>"; };
+		BC9B3BB223DC9A4D0083F2F0 /* TokenOperationQueueDocument.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TokenOperationQueueDocument.md; sourceTree = "<group>"; };
+		BC9B3BB423DC9EB80083F2F0 /* TokenOperationGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenOperationGroup.h; sourceTree = "<group>"; };
+		BC9B3BB523DC9EB80083F2F0 /* TokenOperationGroup.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenOperationGroup.m; sourceTree = "<group>"; };
 		BCB2DFAB22D2400600786463 /* TokenOperationQueue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TokenOperationQueue.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCB2DFAE22D2400600786463 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		BCB2DFAF22D2400600786463 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -29,6 +46,10 @@
 		BCB2DFC722D2407500786463 /* TokenOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TokenOperationQueue.h; sourceTree = "<group>"; };
 		BCB2DFC822D2407500786463 /* TokenOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TokenOperationQueue.m; sourceTree = "<group>"; };
 		BCB2DFCA22D240A900786463 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		BCFABD9C23DC9FEB00FC88CB /* TokenOperationGroup+Chain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TokenOperationGroup+Chain.h"; sourceTree = "<group>"; };
+		BCFABD9D23DC9FEB00FC88CB /* TokenOperationGroup+Chain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TokenOperationGroup+Chain.m"; sourceTree = "<group>"; };
+		BCFABD9F23DCA0D900FC88CB /* TokenOperationQueue+Chain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TokenOperationQueue+Chain.h"; sourceTree = "<group>"; };
+		BCFABDA023DCA0D900FC88CB /* TokenOperationQueue+Chain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TokenOperationQueue+Chain.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +90,7 @@
 				BCB2DFCA22D240A900786463 /* LaunchScreen.storyboard */,
 				BCB2DFBD22D2400700786463 /* main.m */,
 				BCB2DFB422D2400600786463 /* Main.storyboard */,
+				BC9B3BB223DC9A4D0083F2F0 /* TokenOperationQueueDocument.md */,
 				BCB2DFB122D2400600786463 /* ViewController.h */,
 				BCB2DFB222D2400600786463 /* ViewController.m */,
 			);
@@ -78,8 +100,21 @@
 		BCB2DFC622D2407500786463 /* source */ = {
 			isa = PBXGroup;
 			children = (
+				BC9B3BB423DC9EB80083F2F0 /* TokenOperationGroup.h */,
+				BC9B3BB523DC9EB80083F2F0 /* TokenOperationGroup.m */,
+				BCFABD9C23DC9FEB00FC88CB /* TokenOperationGroup+Chain.h */,
+				BCFABD9D23DC9FEB00FC88CB /* TokenOperationGroup+Chain.m */,
+				BC9B394423DC97030083F2F0 /* TokenOperationHeader.h */,
 				BCB2DFC722D2407500786463 /* TokenOperationQueue.h */,
 				BCB2DFC822D2407500786463 /* TokenOperationQueue.m */,
+				BCFABD9F23DCA0D900FC88CB /* TokenOperationQueue+Chain.h */,
+				BCFABDA023DCA0D900FC88CB /* TokenOperationQueue+Chain.m */,
+				BC9B3BAC23DC982F0083F2F0 /* TokenOperationTool.h */,
+				BC9B3BAD23DC982F0083F2F0 /* TokenOperationTool.m */,
+				BC9B3BAF23DC98FC0083F2F0 /* TokenRenderQueue.h */,
+				BC9B3BB023DC98FC0083F2F0 /* TokenRenderQueue.m */,
+				BC9B394123DC96810083F2F0 /* TokenSemaphore.h */,
+				BC9B394223DC96810083F2F0 /* TokenSemaphore.m */,
 			);
 			name = source;
 			path = ../source;
@@ -145,6 +180,7 @@
 				BCB2DFCB22D240A900786463 /* LaunchScreen.storyboard in Resources */,
 				BCB2DFB822D2400700786463 /* Assets.xcassets in Resources */,
 				BCB2DFB622D2400600786463 /* Main.storyboard in Resources */,
+				BC9B3BB323DC9A4D0083F2F0 /* TokenOperationQueueDocument.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,9 +192,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCB2DFB322D2400600786463 /* ViewController.m in Sources */,
+				BCFABDA123DCA0D900FC88CB /* TokenOperationQueue+Chain.m in Sources */,
+				BCFABD9E23DC9FEB00FC88CB /* TokenOperationGroup+Chain.m in Sources */,
+				BC9B3BAE23DC982F0083F2F0 /* TokenOperationTool.m in Sources */,
 				BCB2DFBE22D2400700786463 /* main.m in Sources */,
 				BCB2DFB022D2400600786463 /* AppDelegate.m in Sources */,
 				BCB2DFC922D2407500786463 /* TokenOperationQueue.m in Sources */,
+				BC9B394323DC96810083F2F0 /* TokenSemaphore.m in Sources */,
+				BC9B3BB123DC98FC0083F2F0 /* TokenRenderQueue.m in Sources */,
+				BC9B3BB623DC9EB80083F2F0 /* TokenOperationGroup.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,7 +269,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -280,7 +322,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -295,7 +337,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C9LLPH449N;
 				INFOPLIST_FILE = TokenOperationQueue/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -313,7 +355,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C9LLPH449N;
 				INFOPLIST_FILE = TokenOperationQueue/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
