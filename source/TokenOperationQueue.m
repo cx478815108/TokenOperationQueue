@@ -85,58 +85,6 @@
     });
 }
 
-/// 按照优先级取出应该执行的任务，并且调整队列优先级
-- (dispatch_block_t _Nullable)locked_popOperation {
-    [self lock];
-        dispatch_block_t operation = [self.highOperations firstObject];
-        if (operation) {
-            /// 取到高优先级任务，设置队列优先级为高，pop任务
-            if (self.lastPriorityState != TokenQueuePriorityHigh) {
-                dispatch_set_target_queue(self.concurrentQueue, dispatch_get_global_queue(TokenQueuePriorityHigh, 0));
-            }
-            self.lastPriorityState = TokenQueuePriorityHigh;
-            [self.highOperations removeObjectAtIndex:0];
-        } else {
-            /// 没取到对应的，尝试取默认优先级
-            operation = [self.defaultOperations firstObject];
-            if (operation) {
-                if (self.lastPriorityState != TokenQueuePriorityDefault) {
-                    dispatch_set_target_queue(self.concurrentQueue, dispatch_get_global_queue(TokenQueuePriorityDefault, 0));
-                }
-                self.lastPriorityState = TokenQueuePriorityDefault;
-                [self.defaultOperations removeObjectAtIndex:0];
-            }
-        }
-        if (!operation) {
-            /// 高优和默认优先都取不到
-            operation = [self.lowOperations firstObject];
-            if (operation) {
-                /// 取到低优
-                if (self.lastPriorityState != TokenQueuePriorityLow) {
-                    dispatch_set_target_queue(self.concurrentQueue, dispatch_get_global_queue(TokenQueuePriorityLow, 0));
-                }
-                self.lastPriorityState = TokenQueuePriorityLow;
-                [self.lowOperations removeObjectAtIndex:0];
-            }
-        }
-        if (!operation) {
-            /// 默认优先级也没取到
-            operation = [self.backgroundOperations firstObject];
-            if (operation) {
-                /// 取到后台优先级
-                if (self.lastPriorityState != TokenQueuePriorityBackground) {
-                    dispatch_set_target_queue(self.concurrentQueue, dispatch_get_global_queue(TokenQueuePriorityBackground, 0));
-                }
-                self.lastPriorityState = TokenQueuePriorityBackground;
-                [self.backgroundOperations removeObjectAtIndex:0];
-            }
-        }
-    
-    [self unlock];
-    /// 可能一个都取不到
-    return operation;
-}
-
 /// 取出对应级别的存放任务的数组
 /// @param priority 级别
 - (NSMutableArray * _Nonnull)operationsWithPriority:(TokenQueuePriority)priority {
@@ -194,7 +142,59 @@
             /// 取不到任务也需要释放信号量
             dispatch_semaphore_signal(self.maxConcurrentSemaphore);
         }
-    }); 
+    });
+}
+
+/// 按照优先级取出应该执行的任务，并且调整队列优先级
+- (dispatch_block_t _Nullable)locked_popOperation {
+    [self lock];
+        dispatch_block_t operation = [self.highOperations firstObject];
+        if (operation) {
+            /// 取到高优先级任务，设置队列优先级为高，pop任务
+            if (self.lastPriorityState != TokenQueuePriorityHigh) {
+                dispatch_set_target_queue(self.concurrentQueue, dispatch_get_global_queue(TokenQueuePriorityHigh, 0));
+            }
+            self.lastPriorityState = TokenQueuePriorityHigh;
+            [self.highOperations removeObjectAtIndex:0];
+        } else {
+            /// 没取到对应的，尝试取默认优先级
+            operation = [self.defaultOperations firstObject];
+            if (operation) {
+                if (self.lastPriorityState != TokenQueuePriorityDefault) {
+                    dispatch_set_target_queue(self.concurrentQueue, dispatch_get_global_queue(TokenQueuePriorityDefault, 0));
+                }
+                self.lastPriorityState = TokenQueuePriorityDefault;
+                [self.defaultOperations removeObjectAtIndex:0];
+            }
+        }
+        if (!operation) {
+            /// 高优和默认优先都取不到
+            operation = [self.lowOperations firstObject];
+            if (operation) {
+                /// 取到低优
+                if (self.lastPriorityState != TokenQueuePriorityLow) {
+                    dispatch_set_target_queue(self.concurrentQueue, dispatch_get_global_queue(TokenQueuePriorityLow, 0));
+                }
+                self.lastPriorityState = TokenQueuePriorityLow;
+                [self.lowOperations removeObjectAtIndex:0];
+            }
+        }
+        if (!operation) {
+            /// 默认优先级也没取到
+            operation = [self.backgroundOperations firstObject];
+            if (operation) {
+                /// 取到后台优先级
+                if (self.lastPriorityState != TokenQueuePriorityBackground) {
+                    dispatch_set_target_queue(self.concurrentQueue, dispatch_get_global_queue(TokenQueuePriorityBackground, 0));
+                }
+                self.lastPriorityState = TokenQueuePriorityBackground;
+                [self.backgroundOperations removeObjectAtIndex:0];
+            }
+        }
+    
+    [self unlock];
+    /// 可能一个都取不到
+    return operation;
 }
 
 -(void)waitUntilFinished{
@@ -216,6 +216,16 @@
             operationsCount -= 1;
         }
     [self unlock];
+}
+
+#pragma mark - lock
+
+- (void)lock {
+    pthread_mutex_lock(&_mutexLock);
+}
+
+- (void)unlock {
+    pthread_mutex_unlock(&_mutexLock);
 }
 
 #pragma mark - setter
@@ -243,16 +253,6 @@
             }
         }
     });
-}
-
-#pragma mark - lock
-
-- (void)lock {
-    pthread_mutex_lock(&_mutexLock);
-}
-
-- (void)unlock {
-    pthread_mutex_unlock(&_mutexLock);
 }
 
 #pragma mark - getter
