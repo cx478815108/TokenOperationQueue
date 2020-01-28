@@ -280,28 +280,28 @@
 
 - (NSMutableArray<dispatch_block_t> *)highOperations {
     if (!_highOperations) {
-        _highOperations = [NSMutableArray array];
+        _highOperations = NSMutableArray.array;
     }
     return _highOperations;
 }
 
 - (NSMutableArray<dispatch_block_t> *)defaultOperations {
     if (!_defaultOperations) {
-        _defaultOperations = [NSMutableArray array];
+        _defaultOperations = NSMutableArray.array;
     }
     return _defaultOperations;
 }
 
 - (NSMutableArray<dispatch_block_t> *)lowOperations {
     if (!_lowOperations) {
-        _lowOperations = [NSMutableArray array];
+        _lowOperations = NSMutableArray.array;
     }
     return _lowOperations;
 }
 
 - (NSMutableArray<dispatch_block_t> *)backgroundOperations {
     if (!_backgroundOperations) {
-        _backgroundOperations = [NSMutableArray array];
+        _backgroundOperations = NSMutableArray.array;
     }
     return _backgroundOperations;
 }

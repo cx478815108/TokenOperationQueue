@@ -8,9 +8,6 @@
 
 #import "ViewController.h"
 #import "TokenOperationHeader.h"
-@interface ViewController ()
-
-@end
 
 @implementation ViewController
 
@@ -18,7 +15,7 @@
     [super viewDidLoad];
 }
 - (IBAction)buttonOne:(UIButton *)sender {
-    [self testOne];
+    [self testThree];
 }
 
 - (void)testOne {
@@ -67,6 +64,45 @@
         NSLog(@"5");
     }];
     [TokenOperationQueue.sharedQueue waitUntilFinished];
+}
+
+- (void)testThree {
+    TokenOperationQueue
+    .sharedQueue
+    .chain_setMaxConcurrent(3);
+    __block TokenOperationGroup *group = TokenOperationGroup.group;
+    group
+    .chain_addOperation(^{
+        sleep(1);
+        NSLog(@"1");
+    })
+    .chain_addOperation(^{
+        sleep(2);
+        NSLog(@"2");
+    })
+    .chain_addOperation(^{
+        sleep(3);
+        NSLog(@"3");
+    })
+    .chain_addOperation(^{
+        sleep(1);
+        NSLog(@"4");
+    })
+    .chain_addOperation(^{
+        sleep(2);
+        NSLog(@"5");
+    })
+    .chain_addOperation(^{
+        sleep(3);
+        NSLog(@"6");
+    })
+    .chain_setCompletion(^{
+        NSLog(@"finish");
+    })
+    .chain_run();
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (ino64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        group.chain_cancel();
+    });
 }
 
 - (void)functionOne {
