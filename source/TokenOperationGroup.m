@@ -96,9 +96,9 @@
     dispatch_async(self.processQueue, ^{
         [self lock];
             self.started = YES;
-            /// 按照优先级添加任务到TokenOperationQueue
             NSOperationQueue *queue = [[NSOperationQueue alloc] init];
             queue.maxConcurrentOperationCount = self.privateMaxConcurrent;
+            /// 对所有开发者添加的任务丢到NSOperationQueue
             [queue addOperations:[self operations] waitUntilFinished:NO];
             dispatch_block_t completion = self.privateCompletion;
         [self unlock];
@@ -113,16 +113,24 @@
 - (NSArray<NSOperation *> * _Nullable)operations {
     NSMutableArray<NSOperation *> *ops = [NSMutableArray array];
     for (dispatch_block_t block in self.highOperations) {
-        [ops addObject:[self blockOperationWithBlock:block]];
+        NSBlockOperation *op = [self blockOperationWithBlock:block];
+        op.queuePriority = NSOperationQueuePriorityHigh;
+        [ops addObject:op];
     }
     for (dispatch_block_t block in self.defaultOperations) {
-        [ops addObject:[self blockOperationWithBlock:block]];
+        NSBlockOperation *op = [self blockOperationWithBlock:block];
+        op.queuePriority = NSOperationQueuePriorityNormal;
+        [ops addObject:op];
     }
     for (dispatch_block_t block in self.lowOperations) {
-        [ops addObject:[self blockOperationWithBlock:block]];
+        NSBlockOperation *op = [self blockOperationWithBlock:block];
+        op.queuePriority = NSOperationQueuePriorityLow;
+        [ops addObject:op];
     }
     for (dispatch_block_t block in self.backgroundOperations) {
-        [ops addObject:[self blockOperationWithBlock:block]];
+        NSBlockOperation *op = [self blockOperationWithBlock:block];
+        op.queuePriority = NSOperationQueuePriorityVeryLow;
+        [ops addObject:op];
     }
     return ops.copy;
 }
@@ -130,7 +138,7 @@
 /// 获取最后需要组装的任务
 /// @param block 开发者设置的任务（有可能会被取消）
 - (NSBlockOperation * _Nullable)blockOperationWithBlock:(dispatch_block_t)block {
-    return [NSBlockOperation blockOperationWithBlock:^{
+    NSBlockOperation *op = [NSBlockOperation blockOperationWithBlock:^{
         /// 执行开发者的任务前检查一下是否被取消了
         if (self.canceled) {
             return;
@@ -138,6 +146,7 @@
         block();
         dispatch_group_leave(self.operationsGroup);
     }];
+    return op;
 }
 
 -(void)cancel{
