@@ -7,13 +7,10 @@
 //
 
 #import "TokenOperationGroup.h"
-#import "TokenOperationQueue+Chain.h"
 #import <pthread.h>
 
 @interface TokenOperationGroup()
 
-/// key:优先级 value:任务数组（其实我想搞四个数组，OC的字典类型弱）
-@property (nonatomic, strong, nonnull) NSMutableDictionary <NSNumber *, NSMutableArray <dispatch_block_t> *> *operationsStore;
 /// 添加任务进组，任务完成出组，为privateCompletion服务
 @property (nonatomic, copy, nonnull) dispatch_group_t operationsGroup;
 /// 保障内部任务的串行执行
@@ -27,6 +24,15 @@
 /// 标记任务取消，一旦开发者在任务运行的过程中调用cancel，后面的任务就不执行了
 @property (nonatomic, assign) BOOL canceled;
 
+/// 保存各个优先级的等待执行的任务队列
+@property (nonatomic, strong, nonnull) NSMutableArray <dispatch_block_t> *highOperations;
+@property (nonatomic, strong, nonnull) NSMutableArray <dispatch_block_t> *defaultOperations;
+@property (nonatomic, strong, nonnull) NSMutableArray <dispatch_block_t> *lowOperations;
+@property (nonatomic, strong, nonnull) NSMutableArray <dispatch_block_t> *backgroundOperations;
+
+/// 最大并发数
+@property(nonatomic, assign) NSUInteger privateMaxConcurrent;
+
 @end
 
 @implementation TokenOperationGroup
@@ -37,6 +43,7 @@
 
 - (instancetype)init {
     if (self = [super init]) {
+        _privateMaxConcurrent = [[NSProcessInfo processInfo] activeProcessorCount]*2;
         pthread_mutex_init(&_mutexLock, NULL);
     }
     return self;
@@ -57,12 +64,23 @@
     dispatch_async(self.processQueue, ^{
         [self lock];
             dispatch_group_enter(self.operationsGroup);
-            NSMutableArray *priorityOperationsArray = self.operationsStore[@(priority)];
-            if (!priorityOperationsArray) {
-                priorityOperationsArray = NSMutableArray.array;
-                self.operationsStore[@(priority)] = priorityOperationsArray;
-            }
-            [priorityOperationsArray addObject:operation];
+        switch (priority) {
+            case TokenQueuePriorityHigh:
+                [self.highOperations addObject:operation];
+                break;
+            case TokenQueuePriorityDefault:
+                [self.defaultOperations addObject:operation];
+                break;
+            case TokenQueuePriorityLow:
+                [self.lowOperations addObject:operation];
+                break;
+            case TokenQueuePriorityBackground:
+                [self.backgroundOperations addObject:operation];
+                break;
+            default:
+                [self.defaultOperations addObject:operation];
+                break;
+        }
         [self unlock];
     });
 }
@@ -79,10 +97,9 @@
         [self lock];
             self.started = YES;
             /// 按照优先级添加任务到TokenOperationQueue
-            [self runOperationsWithPriority:(TokenQueuePriorityHigh)];
-            [self runOperationsWithPriority:(TokenQueuePriorityDefault)];
-            [self runOperationsWithPriority:(TokenQueuePriorityLow)];
-            [self runOperationsWithPriority:(TokenQueuePriorityBackground)];
+            NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+            queue.maxConcurrentOperationCount = self.privateMaxConcurrent;
+            [queue addOperations:[self operations] waitUntilFinished:NO];
             dispatch_block_t completion = self.privateCompletion;
         [self unlock];
         dispatch_queue_t completionQueue = dispatch_get_global_queue(TokenQueuePriorityDefault, 0);
@@ -92,27 +109,35 @@
     });
 }
 
-- (void)runOperationsWithPriority:(TokenQueuePriority)priority {
-    if (self.canceled) {
-        return;
+/// 获取组装成功的任务队列
+- (NSArray<NSOperation *> * _Nullable)operations {
+    NSMutableArray<NSOperation *> *ops = [NSMutableArray array];
+    for (dispatch_block_t block in self.highOperations) {
+        [ops addObject:[self blockOperationWithBlock:block]];
     }
-    NSMutableArray <dispatch_block_t> *operations = self.operationsStore[@(priority)];
-    if (!operations) {
-        return;
+    for (dispatch_block_t block in self.defaultOperations) {
+        [ops addObject:[self blockOperationWithBlock:block]];
     }
-    /// 取出该优先级所有任务添加到TokenOperationQueue单例
-    for (NSInteger i = 0; i < operations.count; i++) {
-        dispatch_block_t newOperation = ^{
-            if (self.canceled) {
-                return;
-            }
-            operations[i]();
-            dispatch_group_leave(self.operationsGroup);
-        };
-        TokenOperationQueue.sharedQueue.chain_runOperation(^{
-            newOperation();
-        });
+    for (dispatch_block_t block in self.lowOperations) {
+        [ops addObject:[self blockOperationWithBlock:block]];
     }
+    for (dispatch_block_t block in self.backgroundOperations) {
+        [ops addObject:[self blockOperationWithBlock:block]];
+    }
+    return ops.copy;
+}
+
+/// 获取最后需要组装的任务
+/// @param block 开发者设置的任务（有可能会被取消）
+- (NSBlockOperation * _Nullable)blockOperationWithBlock:(dispatch_block_t)block {
+    return [NSBlockOperation blockOperationWithBlock:^{
+        /// 执行开发者的任务前检查一下是否被取消了
+        if (self.canceled) {
+            return;
+        }
+        block();
+        dispatch_group_leave(self.operationsGroup);
+    }];
 }
 
 -(void)cancel{
@@ -134,13 +159,40 @@
     self.privateCompletion = completion;
 }
 
+#pragma mark - setter
+
+- (void)setMaxConcurrent:(NSUInteger)maxConcurrent {
+    _privateMaxConcurrent = maxConcurrent;
+}
+
 #pragma mark - getter
 
-- (NSMutableDictionary<NSNumber *,NSMutableArray<dispatch_block_t> *> *)operationsStore {
-    if (!_operationsStore) {
-        _operationsStore = NSMutableDictionary.dictionary;
+- (NSMutableArray<dispatch_block_t> *)highOperations {
+    if (!_highOperations) {
+        _highOperations = NSMutableArray.array;
     }
-    return _operationsStore;
+    return _highOperations;
+}
+
+- (NSMutableArray<dispatch_block_t> *)defaultOperations {
+    if (!_defaultOperations) {
+        _defaultOperations = NSMutableArray.array;
+    }
+    return _defaultOperations;
+}
+
+- (NSMutableArray<dispatch_block_t> *)lowOperations {
+    if (!_lowOperations) {
+        _lowOperations = NSMutableArray.array;
+    }
+    return _lowOperations;
+}
+
+- (NSMutableArray<dispatch_block_t> *)backgroundOperations {
+    if (!_backgroundOperations) {
+        _backgroundOperations = NSMutableArray.array;
+    }
+    return _backgroundOperations;
 }
 
 - (dispatch_group_t)operationsGroup {

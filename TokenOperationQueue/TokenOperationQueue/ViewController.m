@@ -20,7 +20,7 @@
 
 - (void)testOne {
     TokenOperationQueue
-    .sharedQueue
+    .queue
     .chain_setMaxConcurrent(20)
     .chain_runOperation(^{
         sleep(2);
@@ -67,11 +67,9 @@
 }
 
 - (void)testThree {
-    TokenOperationQueue
-    .sharedQueue
-    .chain_setMaxConcurrent(3);
     __block TokenOperationGroup *group = TokenOperationGroup.group;
     group
+    .chain_setMaxConcurrent(2)
     .chain_addOperation(^{
         sleep(1);
         NSLog(@"1");
@@ -100,9 +98,37 @@
         NSLog(@"finish");
     })
     .chain_run();
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (ino64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        group.chain_cancel();
-    });
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (ino64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        group.chain_cancel();
+//    });
+}
+
+- (void)textFour {
+    TokenOperationQueue *queue = [[TokenOperationQueue alloc] initWithMaxConcurrent:4];
+    queue
+    .chain_runOperation(^{
+        sleep(2);
+        NSLog(@"1");
+    })
+    .chain_runOperation(^{
+        sleep(1);
+        NSLog(@"2");
+    })
+    .chain_runOperation(^{
+        sleep(10);
+        NSLog(@"3");
+    })
+    .chain_runOperation(^{
+        sleep(1);
+        NSLog(@"4");
+    })
+    .chain_runOperation(^{
+        sleep(2);
+        NSLog(@"5");
+    })
+    .chain_waitUntilFinished();
+
+    NSLog(@"next");
 }
 
 - (void)functionOne {
@@ -146,5 +172,30 @@
     NSOperationQueue *queue = NSOperationQueue.mainQueue;
     [queue addOperations:@[op1, op2, op3, op4, op5, op6] waitUntilFinished:YES];
     NSLog(@"all down");
+}
+
+- (void)functionThree {
+    NSBlockOperation *op1 = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"1");
+    }];
+    NSBlockOperation *op2 = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"2");
+    }];
+    NSBlockOperation *op3 = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"3");
+    }];
+    NSBlockOperation *op4 = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"4");
+    }];
+    NSBlockOperation *op5 = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"5");
+    }];
+    NSBlockOperation *op6 = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"6");
+    }];
+
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.maxConcurrentOperationCount = 6;
+    [queue addOperations:@[op1, op2, op3, op4, op5, op6] waitUntilFinished:NO];
 }
 @end

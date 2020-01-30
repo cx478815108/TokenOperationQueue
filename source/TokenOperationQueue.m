@@ -44,6 +44,11 @@
     return obj;
 }
 
++ (instancetype)queue {
+    NSUInteger defaultNumber = [[NSProcessInfo processInfo] activeProcessorCount]*2;
+    return [[self alloc] initWithMaxConcurrent:defaultNumber];
+}
+
 -(instancetype)initWithMaxConcurrent:(NSUInteger)maxConcurrent{
     if (self = [super init]) {
         /// 初始化多线程读写保护专用锁

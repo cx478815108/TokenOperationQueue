@@ -22,9 +22,10 @@ typedef NS_ENUM(long, TokenQueuePriority) {
 
 - (instancetype _Nonnull)init NS_UNAVAILABLE;
 + (instancetype _Nonnull)new NS_UNAVAILABLE;
-
 /// 获取全局单例 最大并发数和cpu相关
 + (instancetype _Nonnull)sharedQueue;
+/// 获取queue的便利方法，并非单例，所有任务执行完毕该对象释放
++ (instancetype _Nonnull)queue;
 /// 自定义队列
 /// @param maxConcurrent 最大并发数
 - (instancetype _Nonnull)initWithMaxConcurrent:(NSUInteger)maxConcurrent;

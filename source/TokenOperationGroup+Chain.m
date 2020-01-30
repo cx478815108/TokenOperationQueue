@@ -10,6 +10,13 @@
 
 @implementation TokenOperationGroup (Chain)
 
+- (TokenOperationGroupIntegerBlock)chain_setMaxConcurrent {
+    return ^TokenOperationGroup *(NSUInteger maxConcurrent) {
+        [self setMaxConcurrent:maxConcurrent];
+        return self;
+    };
+}
+
 -(TokenOperationGroupChain1Block)chain_addOperation{
     return ^TokenOperationGroup *(dispatch_block_t operation){
         [self addOperation:operation];

@@ -13,8 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupChain0Block) (void);
 typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupChain1Block) (dispatch_block_t operation);
 typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupChain2Block) (TokenQueuePriority priority,dispatch_block_t operation);
+typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupIntegerBlock)(NSUInteger maxConcurrent);
 
 @interface TokenOperationGroup (Chain)
+@property (nonatomic, copy, readonly) TokenOperationGroupIntegerBlock chain_setMaxConcurrent;
 @property(nonatomic, copy, readonly) TokenOperationGroupChain1Block chain_addOperation;
 @property(nonatomic, copy, readonly) TokenOperationGroupChain2Block chain_addOperationWithPriority;
 @property(nonatomic, copy, readonly) TokenOperationGroupChain1Block chain_setCompletion;

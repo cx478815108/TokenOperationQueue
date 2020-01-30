@@ -17,6 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype _Nonnull)new NS_UNAVAILABLE;
 /// 唯一获取group的方法，并非单例，所有任务执行完毕该对象释放
 + (instancetype _Nonnull)group;
+/// 设置最大并发数
+/// @param maxConcurrent 最大并发数
+- (void)setMaxConcurrent:(NSUInteger)maxConcurrent;
 /// 按照默认优先级添加任务
 /// @param operation 要执行的任务
 - (void)addOperation:(dispatch_block_t _Nullable)operation;
