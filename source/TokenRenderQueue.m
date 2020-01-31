@@ -10,13 +10,20 @@
 #import <pthread.h>
 #import <stdatomic.h>
 
-@implementation TokenRenderQueue {
-    NSMutableArray       *_tasks;
-    pthread_mutex_t      _lock;
-    CFRunLoopObserverRef _runLoopObserver;
-}
+@interface TokenRenderQueue ()
 
-+ (instancetype)sharedRenderQueue {
+/// 多线程读写保护专用锁
+@property (nonatomic, assign) pthread_mutex_t mutexLock;
+/// 提交的任务数组
+@property (nonatomic, strong, nonnull) NSMutableArray <dispatch_block_t> *tasks;
+/// 专门用于主线程runloop kCFRunLoopBeforeWaiting 的监听
+@property (nonatomic, assign) CFRunLoopObserverRef runLoopObserver;
+
+@end
+
+@implementation TokenRenderQueue
+
++ (instancetype _Nonnull)sharedRenderQueue {
     static TokenRenderQueue *queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -25,13 +32,9 @@
     return queue;
 }
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        pthread_mutex_init(&_lock, NULL);
-        CFRunLoopRef mainRunloop = CFRunLoopGetMain();
-        _tasks = @[].mutableCopy;
-
+- (instancetype _Nonnull)init {
+    if (self = [super init]) {
+        pthread_mutex_init(&_mutexLock, NULL);
         __unsafe_unretained TokenRenderQueue *weakSelf = self;
         _runLoopObserver = CFRunLoopObserverCreateWithHandler(NULL,
                                                               kCFRunLoopBeforeWaiting, // before the run loop starts sleeping
@@ -40,43 +43,54 @@
                                                               ^(CFRunLoopObserverRef observer, CFRunLoopActivity activity) {
             [weakSelf processTask];
         });
-        CFRunLoopAddObserver(mainRunloop, _runLoopObserver,  kCFRunLoopCommonModes);
+        CFRunLoopAddObserver(CFRunLoopGetMain(), _runLoopObserver,  kCFRunLoopCommonModes);
     }
     return self;
 }
 
-- (void)dealloc
-{
-    pthread_mutex_destroy(&_lock);
+- (void)dealloc {
+    pthread_mutex_destroy(&_mutexLock);
     CFRelease(_runLoopObserver);
     _runLoopObserver = nil;
 }
 
--(void)addTask:(dispatch_block_t)task {
-    if (task == nil) return ;
-    [self lock];
-    [_tasks addObject:task];
-    [self unlock];
-}
-
--(void)processTask{
-    [self lock];
-    dispatch_block_t task = [_tasks firstObject];
-    if (task) {
-        task();
-        [_tasks removeObjectAtIndex:0];
+- (void)addTask:(dispatch_block_t _Nonnull)task {
+    NSAssert(task, @"task cannot be nil");
+    if (!task) {
+        return;
     }
+    [self lock];
+        [self.tasks addObject:task];
     [self unlock];
 }
 
-- (void)lock
-{
-    pthread_mutex_lock(&_lock);
+- (void)processTask {
+    [self lock];
+        dispatch_block_t task = [self.tasks firstObject];
+        if (task) {
+            task();
+            [self.tasks removeObjectAtIndex:0];
+        }
+    [self unlock];
 }
 
-- (void)unlock
-{
-    pthread_mutex_unlock(&_lock);
+#pragma mark - lock
+
+- (void)lock {
+    pthread_mutex_lock(&_mutexLock);
+}
+
+- (void)unlock {
+    pthread_mutex_unlock(&_mutexLock);
+}
+
+#pragma mark - getter
+
+- (NSMutableArray <dispatch_block_t> *)tasks {
+    if (!_tasks) {
+        _tasks = NSMutableArray.array;
+    }
+    return _tasks;
 }
 
 @end

@@ -16,15 +16,15 @@
 
 @implementation TokenSemaphore
 
-+ (instancetype)waitSemaphore {
++ (instancetype _Nonnull)waitSemaphore {
     return [[self alloc] initWithCount:0];
 }
 
-+ (instancetype)lockSemaphore {
++ (instancetype _Nonnull)lockSemaphore {
     return [[self alloc] initWithCount:1];
 }
 
-- (instancetype)initWithCount:(NSInteger)count {
+- (instancetype _Nonnull)initWithCount:(NSInteger)count {
     if (self = [super init]) {
         _semaphore = dispatch_semaphore_create(count);
     }

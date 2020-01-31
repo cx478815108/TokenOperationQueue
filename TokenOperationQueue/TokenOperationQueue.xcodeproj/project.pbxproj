@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC69625A23E45E7C00614AD2 /* SwiftCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC69625923E45E7C00614AD2 /* SwiftCodeVC.swift */; };
 		BC9B394323DC96810083F2F0 /* TokenSemaphore.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9B394223DC96810083F2F0 /* TokenSemaphore.m */; };
 		BC9B3BAE23DC982F0083F2F0 /* TokenOperationTool.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9B3BAD23DC982F0083F2F0 /* TokenOperationTool.m */; };
 		BC9B3BB123DC98FC0083F2F0 /* TokenRenderQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9B3BB023DC98FC0083F2F0 /* TokenRenderQueue.m */; };
-		BC9B3BB323DC9A4D0083F2F0 /* TokenOperationQueueDocument.md in Resources */ = {isa = PBXBuildFile; fileRef = BC9B3BB223DC9A4D0083F2F0 /* TokenOperationQueueDocument.md */; };
 		BC9B3BB623DC9EB80083F2F0 /* TokenOperationGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9B3BB523DC9EB80083F2F0 /* TokenOperationGroup.m */; };
 		BCB2DFB022D2400600786463 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB2DFAF22D2400600786463 /* AppDelegate.m */; };
 		BCB2DFB322D2400600786463 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB2DFB222D2400600786463 /* ViewController.m */; };
@@ -24,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BC69625823E45E7B00614AD2 /* TokenOperationQueue-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TokenOperationQueue-Bridging-Header.h"; sourceTree = "<group>"; };
+		BC69625923E45E7C00614AD2 /* SwiftCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftCodeVC.swift; sourceTree = "<group>"; };
 		BC9B394123DC96810083F2F0 /* TokenSemaphore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenSemaphore.h; sourceTree = "<group>"; };
 		BC9B394223DC96810083F2F0 /* TokenSemaphore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenSemaphore.m; sourceTree = "<group>"; };
 		BC9B394423DC97030083F2F0 /* TokenOperationHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenOperationHeader.h; sourceTree = "<group>"; };
@@ -31,7 +33,6 @@
 		BC9B3BAD23DC982F0083F2F0 /* TokenOperationTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenOperationTool.m; sourceTree = "<group>"; };
 		BC9B3BAF23DC98FC0083F2F0 /* TokenRenderQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenRenderQueue.h; sourceTree = "<group>"; };
 		BC9B3BB023DC98FC0083F2F0 /* TokenRenderQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenRenderQueue.m; sourceTree = "<group>"; };
-		BC9B3BB223DC9A4D0083F2F0 /* TokenOperationQueueDocument.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TokenOperationQueueDocument.md; sourceTree = "<group>"; };
 		BC9B3BB423DC9EB80083F2F0 /* TokenOperationGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenOperationGroup.h; sourceTree = "<group>"; };
 		BC9B3BB523DC9EB80083F2F0 /* TokenOperationGroup.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenOperationGroup.m; sourceTree = "<group>"; };
 		BCB2DFAB22D2400600786463 /* TokenOperationQueue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TokenOperationQueue.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,7 +91,8 @@
 				BCB2DFCA22D240A900786463 /* LaunchScreen.storyboard */,
 				BCB2DFBD22D2400700786463 /* main.m */,
 				BCB2DFB422D2400600786463 /* Main.storyboard */,
-				BC9B3BB223DC9A4D0083F2F0 /* TokenOperationQueueDocument.md */,
+				BC69625923E45E7C00614AD2 /* SwiftCodeVC.swift */,
+				BC69625823E45E7B00614AD2 /* TokenOperationQueue-Bridging-Header.h */,
 				BCB2DFB122D2400600786463 /* ViewController.h */,
 				BCB2DFB222D2400600786463 /* ViewController.m */,
 			);
@@ -151,6 +153,7 @@
 				TargetAttributes = {
 					BCB2DFAA22D2400600786463 = {
 						CreatedOnToolsVersion = 10.2.1;
+						LastSwiftMigration = 1130;
 					};
 				};
 			};
@@ -180,7 +183,6 @@
 				BCB2DFCB22D240A900786463 /* LaunchScreen.storyboard in Resources */,
 				BCB2DFB822D2400700786463 /* Assets.xcassets in Resources */,
 				BCB2DFB622D2400600786463 /* Main.storyboard in Resources */,
-				BC9B3BB323DC9A4D0083F2F0 /* TokenOperationQueueDocument.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +196,7 @@
 				BCB2DFB322D2400600786463 /* ViewController.m in Sources */,
 				BCFABDA123DCA0D900FC88CB /* TokenOperationQueue+Chain.m in Sources */,
 				BCFABD9E23DC9FEB00FC88CB /* TokenOperationGroup+Chain.m in Sources */,
+				BC69625A23E45E7C00614AD2 /* SwiftCodeVC.swift in Sources */,
 				BC9B3BAE23DC982F0083F2F0 /* TokenOperationTool.m in Sources */,
 				BCB2DFBE22D2400700786463 /* main.m in Sources */,
 				BCB2DFB022D2400600786463 /* AppDelegate.m in Sources */,
@@ -334,6 +337,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C9LLPH449N;
 				INFOPLIST_FILE = TokenOperationQueue/Info.plist;
@@ -344,6 +348,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.token.TokenOperationQueue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "TokenOperationQueue/TokenOperationQueue-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -352,6 +359,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C9LLPH449N;
 				INFOPLIST_FILE = TokenOperationQueue/Info.plist;
@@ -362,6 +370,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.token.TokenOperationQueue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "TokenOperationQueue/TokenOperationQueue-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

@@ -12,10 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TokenRenderQueue : NSObject
 
--(instancetype)init NS_UNAVAILABLE;
-+(instancetype)new NS_UNAVAILABLE;
-+(instancetype)sharedRenderQueue;
-- (void)addTask:(dispatch_block_t)task;
+- (instancetype _Nonnull)init NS_UNAVAILABLE;
++ (instancetype _Nonnull)new NS_UNAVAILABLE;
++ (instancetype _Nonnull)sharedRenderQueue;
+- (void)addTask:(dispatch_block_t _Nonnull)task;
 
 @end
 
