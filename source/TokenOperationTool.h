@@ -11,12 +11,12 @@
 #ifndef TokenOperationTool_h
 #define TokenOperationTool_h
 
-void TokenOperationRunOnMainThread(dispatch_block_t operation);
-void TokenTranscationCommit(dispatch_block_t operation);
+void TokenOperationRunOnMainThread(dispatch_block_t _Nonnull operation);
+void TokenTranscationCommit(dispatch_block_t _Nonnull operation);
 void TokenDispatchApply(size_t count,
-                        dispatch_queue_t queue,
+                        dispatch_queue_t _Nonnull queue,
                         NSUInteger threadCount,
-                        void(^work)(size_t i));
+                        void(^ _Nonnull work)(size_t i));
 BOOL TokenIsMainThread(void);
 
 #endif  /* TokenOperationTool_h*/

@@ -12,13 +12,13 @@
 #import <stdatomic.h>
 #import <pthread.h>
 
-void TokenOperationRunOnMainThread(dispatch_block_t operation){
+void TokenOperationRunOnMainThread(dispatch_block_t _Nonnull operation) {
+    assert(operation);
     if (!operation) {
-        return ;
+        return;
     }
     if (TokenIsMainThread()) {
         operation();
-
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
             operation();
@@ -26,15 +26,25 @@ void TokenOperationRunOnMainThread(dispatch_block_t operation){
     }
 }
 
-void TokenTranscationCommit(dispatch_block_t operation){
+void TokenTranscationCommit(dispatch_block_t _Nonnull operation) {
+    assert(operation);
+    if (!operation) {
+        return;
+    }
     [[TokenRenderQueue sharedRenderQueue] addTask:operation];
 }
 
 void TokenDispatchApply(size_t count,
-                        dispatch_queue_t queue,
+                        dispatch_queue_t _Nonnull queue,
                         NSUInteger threadCount,
-                        void(^work)(size_t i)) {
-    if (threadCount == 0) { threadCount = 2;}
+                        void(^ _Nonnull work)(size_t i)) {
+    assert(queue && work);
+    if (!queue || !work) {
+        return;
+    }
+    if (threadCount == 0) {
+        threadCount = 2;
+    }
     dispatch_group_t group = dispatch_group_create();
     __block atomic_size_t counter = ATOMIC_VAR_INIT(0);
     for (NSUInteger t = 0; t < threadCount; t++) {
@@ -46,7 +56,7 @@ void TokenDispatchApply(size_t count,
         });
     }
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-};
+}
 
 BOOL TokenIsMainThread(void) {
     return (0 != pthread_main_np());

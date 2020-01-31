@@ -10,43 +10,43 @@
 
 @implementation TokenOperationGroup (Chain)
 
-- (TokenOperationGroupIntegerBlock)chain_setMaxConcurrent {
+- (TokenOperationGroupUIntegerBlock _Nonnull)chain_setMaxConcurrent {
     return ^TokenOperationGroup *(NSUInteger maxConcurrent) {
         [self setMaxConcurrent:maxConcurrent];
         return self;
     };
 }
 
--(TokenOperationGroupChain1Block)chain_addOperation{
-    return ^TokenOperationGroup *(dispatch_block_t operation){
+- (TokenOperationGroupChain1Block _Nonnull)chain_addOperation {
+    return ^TokenOperationGroup *(dispatch_block_t _Nonnull operation) {
         [self addOperation:operation];
         return self;
     };
 }
 
--(TokenOperationGroupChain2Block)chain_addOperationWithPriority{
-    return ^TokenOperationGroup *(TokenQueuePriority priority,dispatch_block_t operation){
+- (TokenOperationGroupChain2Block _Nonnull)chain_addOperationWithPriority {
+    return ^TokenOperationGroup *(NSOperationQueuePriority priority,dispatch_block_t _Nonnull operation) {
         [self addOperation:operation withPriority:priority];
         return self;
     };
 }
 
--(TokenOperationGroupChain1Block)chain_setCompletion{
-    return ^TokenOperationGroup *(dispatch_block_t completion){
+- (TokenOperationGroupChain3Block _Nonnull)chain_setCompletion {
+    return ^TokenOperationGroup *(dispatch_block_t _Nullable completion) {
         [self setCompletion:completion];
         return self;
     };
 }
 
--(TokenOperationGroupChain0Block)chain_run{
-    return ^TokenOperationGroup *(void){
+- (TokenOperationGroupChain0Block _Nonnull)chain_run {
+    return ^TokenOperationGroup *(void) {
         [self run];
         return self;
     };
 }
 
--(dispatch_block_t)chain_cancel{
-    return ^(void){
+- (dispatch_block_t _Nonnull)chain_cancel {
+    return ^(void) {
         [self cancel];
     };
 }

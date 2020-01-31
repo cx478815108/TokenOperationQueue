@@ -11,17 +11,20 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupChain0Block) (void);
-typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupChain1Block) (dispatch_block_t operation);
-typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupChain2Block) (TokenQueuePriority priority,dispatch_block_t operation);
-typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupIntegerBlock)(NSUInteger maxConcurrent);
+typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupChain1Block) (dispatch_block_t _Nonnull operation);
+typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupChain2Block) (NSOperationQueuePriority priority, dispatch_block_t _Nonnull operation);
+typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupChain3Block) (dispatch_block_t _Nullable operation);
+typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupUIntegerBlock) (NSUInteger maxConcurrent);
 
 @interface TokenOperationGroup (Chain)
-@property (nonatomic, copy, readonly) TokenOperationGroupIntegerBlock chain_setMaxConcurrent;
-@property(nonatomic, copy, readonly) TokenOperationGroupChain1Block chain_addOperation;
-@property(nonatomic, copy, readonly) TokenOperationGroupChain2Block chain_addOperationWithPriority;
-@property(nonatomic, copy, readonly) TokenOperationGroupChain1Block chain_setCompletion;
-@property(nonatomic, copy, readonly) TokenOperationGroupChain0Block chain_run;
-@property(nonatomic, copy, readonly) dispatch_block_t               chain_cancel;
+
+@property (nonatomic, copy, readonly, nonnull) TokenOperationGroupUIntegerBlock chain_setMaxConcurrent;
+@property (nonatomic, copy, readonly, nonnull) TokenOperationGroupChain1Block   chain_addOperation;
+@property (nonatomic, copy, readonly, nonnull) TokenOperationGroupChain2Block   chain_addOperationWithPriority;
+@property (nonatomic, copy, readonly, nonnull) TokenOperationGroupChain3Block   chain_setCompletion;
+@property (nonatomic, copy, readonly, nonnull) TokenOperationGroupChain0Block   chain_run;
+@property (nonatomic, copy, readonly, nonnull) dispatch_block_t                 chain_cancel;
+
 @end
 
 NS_ASSUME_NONNULL_END
