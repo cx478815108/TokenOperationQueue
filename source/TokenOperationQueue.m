@@ -25,10 +25,12 @@
 @property (nonatomic, strong, nonnull) NSMutableArray <dispatch_block_t> *defaultOperations;
 @property (nonatomic, strong, nonnull) NSMutableArray <dispatch_block_t> *lowOperations;
 @property (nonatomic, strong, nonnull) NSMutableArray <dispatch_block_t> *backgroundOperations;
-/// 控制最大并发数的信号量，所有的当_maxConcurrent大于1时的任务是否可以执行都需要通过该信号量控制
+/// 控制最大并发数的信号量，所有的当_maxConcurrent大于1时的任务是否可以执行都需要通过该信号量控制，dealloc保证大于初始值
 @property (nonatomic, copy, nonnull) dispatch_semaphore_t maxConcurrentSemaphore;
 /// 队列优先级flag，用于调整任务执行优先级
 @property (nonatomic, assign) TokenQueuePriority lastPriorityState;
+/// 标记任务取消，一旦开发者在任务运行的过程中调用cancel，后面的任务就不执行了
+@property (nonatomic, assign) BOOL canceled;
 
 @end
 
@@ -38,14 +40,14 @@
     static TokenOperationQueue *obj;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSUInteger defaultNumber = [[NSProcessInfo processInfo] activeProcessorCount]*2;
+        NSUInteger defaultNumber = NSProcessInfo.processInfo.activeProcessorCount*2;
         obj = [[TokenOperationQueue alloc] initWithMaxConcurrent:defaultNumber];
     });
     return obj;
 }
 
 + (instancetype)queue {
-    NSUInteger defaultNumber = [[NSProcessInfo processInfo] activeProcessorCount]*2;
+    NSUInteger defaultNumber = NSProcessInfo.processInfo.activeProcessorCount*2;
     return [[self alloc] initWithMaxConcurrent:defaultNumber];
 }
 
@@ -59,7 +61,10 @@
         /// 设置最大并发量
         _maxConcurrent = maxConcurrent;
         /// 初始化控制最大并发数的信号量
-        _maxConcurrentSemaphore = dispatch_semaphore_create(maxConcurrent);
+        _maxConcurrentSemaphore = dispatch_semaphore_create(0);
+        for (NSInteger i = 0; i < _maxConcurrent; i++) {
+            dispatch_semaphore_signal(_maxConcurrentSemaphore);
+        }
     }
     return self;
 }
@@ -120,7 +125,9 @@
         if (operation) {
             /// 所有的添加到serialQueue的task会依次执行
             dispatch_async(self.serialQueue, ^{
-                operation();
+                if (!self.canceled) {
+                    operation();
+                }
                 /// 任务执行完毕，出组
                 dispatch_group_leave(self.operationsGroup);
                 [self execute];
@@ -136,7 +143,9 @@
         dispatch_block_t operation = [self locked_popOperation];
         if (operation) {
             dispatch_async(self.concurrentQueue, ^{
-                operation();
+                if (!self.canceled) {
+                    operation();
+                }
                 /// 任务执行完毕需要释放信号量
                 dispatch_semaphore_signal(self.maxConcurrentSemaphore);
                 /// 任务执行完毕，出组
@@ -211,16 +220,7 @@
 
 -(void)cancelAllOperations{
     [self lock];
-        NSInteger operationsCount = self.highOperations.count + self.defaultOperations.count +self.lowOperations.count + self.backgroundOperations.count;
-        [self.highOperations       removeAllObjects];
-        [self.defaultOperations    removeAllObjects];
-        [self.lowOperations        removeAllObjects];
-        [self.backgroundOperations removeAllObjects];
-        /// 取消所有任务，需要计算没被执行的任务，进行对应次数的出组，保证不会阻塞当前线程，导致waitUntilFinished无法返回
-        while (operationsCount != 0) {
-            dispatch_group_leave(self.operationsGroup);
-            operationsCount -= 1;
-        }
+        self.canceled = YES;
     [self unlock];
 }
 

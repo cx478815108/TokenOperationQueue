@@ -42,7 +42,7 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _privateMaxConcurrent = [[NSProcessInfo processInfo] activeProcessorCount] * 2;
+        _privateMaxConcurrent = NSProcessInfo.processInfo.activeProcessorCount*2;
         pthread_mutex_init(&_mutexLock, NULL);
     }
     return self;

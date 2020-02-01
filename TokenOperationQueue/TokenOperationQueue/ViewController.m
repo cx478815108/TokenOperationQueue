@@ -13,25 +13,104 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-}
-- (IBAction)buttonOne:(UIButton *)sender {
-    [self testThree];
+    [self groupCancel];
 }
 
-- (void)testOne {
+#pragma mark - queue
+
+- (void)runOperation {
     TokenOperationQueue
-    .queue
-    .chain_setMaxConcurrent(20)
+    .sharedQueue
     .chain_runOperation(^{
-        sleep(2);
+        sleep(1);
         NSLog(@"1");
     })
     .chain_runOperation(^{
-        sleep(1);
+        sleep(2);
         NSLog(@"2");
     })
     .chain_runOperation(^{
-        sleep(10);
+        sleep(3);
+        NSLog(@"3");
+    })
+    .chain_runOperation(^{
+        sleep(3);
+        NSLog(@"4");
+    })
+    .chain_runOperation(^{
+        sleep(2);
+        NSLog(@"5");
+    })
+    .chain_runOperation(^{
+        sleep(1);
+        NSLog(@"6");
+    });
+}
+
+- (void)runOperationWithPriority {
+    TokenOperationQueue
+    .sharedQueue
+    .chain_runOperationWithPriority(TokenQueuePriorityHigh, ^{
+        sleep(1);
+        NSLog(@"1");
+    })
+    .chain_runOperationWithPriority(TokenQueuePriorityBackground, ^{
+        sleep(2);
+        NSLog(@"2");
+    })
+    .chain_runOperationWithPriority(TokenQueuePriorityLow, ^{
+        sleep(2);
+        NSLog(@"3");
+    })
+    .chain_runOperationWithPriority(TokenQueuePriorityDefault, ^{
+        NSLog(@"4");
+    });
+}
+
+- (void)changeMaxConcurrent {
+    TokenOperationQueue
+    .sharedQueue
+    .chain_setMaxConcurrent(1)
+    .chain_runOperation(^{
+        sleep(1);
+        NSLog(@"1");
+    })
+    .chain_runOperation(^{
+        sleep(2);
+        NSLog(@"2");
+    })
+    .chain_runOperation(^{
+        sleep(3);
+        NSLog(@"3");
+    })
+    .chain_runOperation(^{
+        sleep(3);
+        NSLog(@"4");
+    })
+    .chain_runOperation(^{
+        sleep(2);
+        NSLog(@"5");
+    })
+    .chain_runOperation(^{
+        sleep(1);
+        NSLog(@"6");
+    });
+}
+
+- (void)waitUntilFinished {
+    TokenOperationQueue
+    .sharedQueue
+    .chain_setMaxConcurrent(5)
+    .chain_runOperation(^{
+        sleep(6);
+        NSLog(@"1");
+    })
+    .chain_runOperation(^{
+        sleep(2);
+        NSLog(@"2");
+    })
+    .chain_runOperation(^{
+        sleep(1);
         NSLog(@"3");
     })
     .chain_runOperation(^{
@@ -39,163 +118,155 @@
         NSLog(@"4");
     })
     .chain_runOperation(^{
-        sleep(2);
+        sleep(1);
         NSLog(@"5");
+    })
+    .chain_waitUntilFinished()
+    .chain_runOperation(^{
+        NSLog(@"6");
+    })
+    .chain_runOperation(^{
+        NSLog(@"7");
+    })
+    .chain_runOperation(^{
+        sleep(5);
+        NSLog(@"8");
+    })
+    .chain_waitUntilFinished()
+    .chain_runOperation(^{
+        sleep(5);
+        NSLog(@"9");
     })
     .chain_waitUntilFinished();
-
-    NSLog(@"next");
+    NSLog(@"done");
 }
 
-- (void)textTwo {
-    [TokenOperationQueue.sharedQueue runOperation:^{
-        NSLog(@"1");
-    }];
-    [TokenOperationQueue.sharedQueue runOperation:^{
-        NSLog(@"2");
-    }];
-    [TokenOperationQueue.sharedQueue runOperation:^{
-        NSLog(@"3");
-    }];
-    [TokenOperationQueue.sharedQueue runOperation:^{
-        NSLog(@"4");
-    }];
-    [TokenOperationQueue.sharedQueue runOperation:^{
-        NSLog(@"5");
-    }];
-    [TokenOperationQueue.sharedQueue waitUntilFinished];
+- (void)cancelAllOperations {
+    __block TokenOperationQueue *queue = TokenOperationQueue
+    .queue
+    .chain_setMaxConcurrent(1)
+    .chain_runOperation(^{
+        NSLog(@"1s");
+        sleep(2);
+        NSLog(@"1e");
+    })
+    .chain_runOperation(^{
+        NSLog(@"2s");
+        sleep(2);
+        NSLog(@"2e");
+    })
+    .chain_runOperation(^{
+        NSLog(@"3s");
+        sleep(2);
+        NSLog(@"3e");
+    })
+    .chain_runOperation(^{
+        NSLog(@"4s");
+        sleep(2);
+        NSLog(@"4e");
+    })
+    .chain_runOperation(^{
+        NSLog(@"5s");
+        sleep(2);
+        NSLog(@"5e");
+    });
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"ready to cancel");
+        queue.chain_cancelAllOperations();
+        NSLog(@"canceled");
+    });
+    NSLog(@"done");
 }
 
-- (void)testThree {
-    __block TokenOperationGroup *group = TokenOperationGroup.group;
-    group
+#pragma mark - group
+
+- (void)group {
+    TokenOperationGroup
+    .group
     .chain_setMaxConcurrent(2)
     .chain_addOperation(^{
+        NSLog(@"1s");
         sleep(1);
-        NSLog(@"1");
+        NSLog(@"1e");
     })
     .chain_addOperation(^{
-        sleep(2);
         NSLog(@"2");
     })
     .chain_addOperation(^{
-        sleep(3);
         NSLog(@"3");
     })
     .chain_addOperation(^{
-        sleep(1);
         NSLog(@"4");
-    })
-    .chain_addOperation(^{
-        sleep(2);
-        NSLog(@"5");
-    })
-    .chain_addOperation(^{
-        sleep(3);
-        NSLog(@"6");
     })
     .chain_setCompletion(^{
-        NSLog(@"finish");
+        NSLog(@"done");
     })
     .chain_run();
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (ino64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        group.chain_cancel();
-//    });
 }
 
-- (void)textFour {
-    TokenOperationQueue *queue = [[TokenOperationQueue alloc] initWithMaxConcurrent:4];
-    queue
-    .chain_runOperation(^{
-        sleep(2);
+- (void)groupWithPriority {
+    TokenOperationGroup
+    .group
+    .chain_setMaxConcurrent(2)
+    .chain_addOperationWithPriority(NSOperationQueuePriorityVeryLow, ^{
         NSLog(@"1");
     })
-    .chain_runOperation(^{
+    .chain_addOperationWithPriority(NSOperationQueuePriorityLow, ^{
+        NSLog(@"2");
+    })
+    .chain_addOperationWithPriority(NSOperationQueuePriorityNormal, ^{
+        NSLog(@"3");
+    })
+    .chain_addOperationWithPriority(NSOperationQueuePriorityHigh, ^{
+        NSLog(@"4");
+    })
+    .chain_addOperationWithPriority(NSOperationQueuePriorityVeryHigh, ^{
+        NSLog(@"5");
+    })
+    .chain_setCompletion(^{
+        NSLog(@"done");
+    })
+    .chain_run();
+}
+
+- (void)groupCancel {
+    __block TokenOperationGroup *group = TokenOperationGroup
+    .group
+    .chain_setMaxConcurrent(1)
+    .chain_addOperation(^{
+        NSLog(@"1s");
         sleep(1);
-        NSLog(@"2");
+        NSLog(@"1e");
     })
-    .chain_runOperation(^{
-        sleep(10);
-        NSLog(@"3");
-    })
-    .chain_runOperation(^{
+    .chain_addOperation(^{
+        NSLog(@"2s");
         sleep(1);
-        NSLog(@"4");
+        NSLog(@"2e");
     })
-    .chain_runOperation(^{
-        sleep(2);
-        NSLog(@"5");
+    .chain_addOperation(^{
+        NSLog(@"3s");
+        sleep(1);
+        NSLog(@"3e");
     })
-    .chain_waitUntilFinished();
-
-    NSLog(@"next");
+    .chain_addOperation(^{
+        NSLog(@"4s");
+        sleep(1);
+        NSLog(@"4e");
+    })
+    .chain_addOperation(^{
+        NSLog(@"5s");
+        sleep(1);
+        NSLog(@"5e");
+    })
+    .chain_setCompletion(^{
+        NSLog(@"done");
+    })
+    .chain_run();
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"ready to cancel");
+        group.chain_cancel();
+        NSLog(@"canceled");
+    });
 }
 
-- (void)functionOne {
-    NSBlockOperation *blockOp = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"1");
-    }];
-    [blockOp addExecutionBlock:^{
-        NSLog(@"2");
-    }];
-    [blockOp addExecutionBlock:^{
-        NSLog(@"3");
-    }];
-    [blockOp addExecutionBlock:^{
-        NSLog(@"4");
-    }];
-    [blockOp addExecutionBlock:^{
-        NSLog(@"5");
-    }];
-    [blockOp start];
-}
-
-- (void)functionTwo {
-    NSBlockOperation *op1 = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"1");
-    }];
-    NSBlockOperation *op2 = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"2");
-    }];
-    NSBlockOperation *op3 = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"3");
-    }];
-    NSBlockOperation *op4 = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"4");
-    }];
-    NSBlockOperation *op5 = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"5");
-    }];
-    NSBlockOperation *op6 = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"6");
-    }];
-    NSOperationQueue *queue = NSOperationQueue.mainQueue;
-    [queue addOperations:@[op1, op2, op3, op4, op5, op6] waitUntilFinished:YES];
-    NSLog(@"all down");
-}
-
-- (void)functionThree {
-    NSBlockOperation *op1 = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"1");
-    }];
-    NSBlockOperation *op2 = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"2");
-    }];
-    NSBlockOperation *op3 = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"3");
-    }];
-    NSBlockOperation *op4 = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"4");
-    }];
-    NSBlockOperation *op5 = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"5");
-    }];
-    NSBlockOperation *op6 = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"6");
-    }];
-
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    queue.maxConcurrentOperationCount = 6;
-    [queue addOperations:@[op1, op2, op3, op4, op5, op6] waitUntilFinished:NO];
-}
 @end
