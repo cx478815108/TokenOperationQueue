@@ -10,35 +10,35 @@
 
 @implementation TokenOperationQueue (Chain)
 
--(TokenOperationChain1Block)chain_runOperation{
-    return ^TokenOperationQueue *(dispatch_block_t operation) {
+- (TokenOperationChain1Block _Nonnull)chain_runOperation {
+    return ^TokenOperationQueue *(dispatch_block_t _Nonnull operation) {
         [self runOperation:operation];
         return self;
     };
 }
 
--(TokenOperationChain2Block)chain_runOperationWithPriority{
-    return ^TokenOperationQueue *(TokenQueuePriority priority,dispatch_block_t operation) {
+- (TokenOperationChain2Block _Nonnull)chain_runOperationWithPriority {
+    return ^TokenOperationQueue *(TokenQueuePriority priority,dispatch_block_t _Nonnull operation) {
         [self runOperation:operation withPriority:priority];
         return self;
     };
 }
 
--(TokenOperationChain0Block)chain_waitUntilFinished{
+- (TokenOperationChain0Block _Nonnull)chain_waitUntilFinished {
     return ^TokenOperationQueue *(void) {
         [self waitUntilFinished];
         return self;
     };
 }
 
--(TokenOperationChain0Block)chain_cancelAllOperations{
+- (TokenOperationChain0Block _Nonnull)chain_cancelAllOperations {
     return ^TokenOperationQueue *(void) {
         [self cancelAllOperations];
         return self;
     };
 }
 
--(TokenOperationIntegerBlock)chain_setMaxConcurrent{
+- (TokenOperationUIntegerBlock _Nonnull)chain_setMaxConcurrent {
     return ^TokenOperationQueue *(NSUInteger maxConcurrent) {
         [self setMaxConcurrent:maxConcurrent];
         return self;

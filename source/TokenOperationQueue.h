@@ -31,11 +31,11 @@ typedef NS_ENUM(long, TokenQueuePriority) {
 - (instancetype _Nonnull)initWithMaxConcurrent:(NSUInteger)maxConcurrent;
 /// 以默认优先级执行任务
 /// @param operation 任务
-- (void)runOperation:(dispatch_block_t _Nullable)operation;
+- (void)runOperation:(dispatch_block_t _Nonnull)operation;
 /// 以指定优先级执行任务
 /// @param operation 任务
 /// @param priority 优先级
-- (void)runOperation:(dispatch_block_t _Nullable)operation
+- (void)runOperation:(dispatch_block_t _Nonnull)operation
         withPriority:(TokenQueuePriority)priority;
 /// 阻塞当前Thread，等待所有任务执行完毕该方法才会返回
 - (void)waitUntilFinished;

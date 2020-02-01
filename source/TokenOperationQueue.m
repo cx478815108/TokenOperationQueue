@@ -68,12 +68,13 @@
     pthread_mutex_destroy(&_mutexLock);
 }
 
--(void)runOperation:(dispatch_block_t _Nullable)operation{
+-(void)runOperation:(dispatch_block_t _Nonnull)operation{
     [self runOperation:operation withPriority:TokenQueuePriorityDefault];
 }
 
-- (void)runOperation:(dispatch_block_t _Nullable)operation
+- (void)runOperation:(dispatch_block_t _Nonnull)operation
         withPriority:(TokenQueuePriority)priority {
+    NSAssert(operation, @"operation cannot be nil, please check your code");
     if (!operation) {
         return;
     }
