@@ -31,7 +31,7 @@
     };
 }
 
-- (TokenOperationGroupChain3Block _Nonnull)chain_setCompletion {
+- (TokenOperationGroupChain1Block _Nonnull)chain_setCompletion {
     return ^TokenOperationGroup *(dispatch_block_t _Nullable completion) {
         [self setCompletion:completion];
         return self;

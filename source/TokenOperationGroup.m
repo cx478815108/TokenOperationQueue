@@ -110,7 +110,8 @@
     pthread_mutex_unlock(&_mutexLock);
 }
 
-- (void)setCompletion:(dispatch_block_t _Nullable)completion {
+- (void)setCompletion:(dispatch_block_t _Nonnull)completion {
+    NSAssert(completion, @"completion you set cannot be nil, please check your code");
     self.privateCompletion = completion;
 }
 

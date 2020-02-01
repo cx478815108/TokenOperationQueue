@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
         withPriority:(NSOperationQueuePriority)priority;
 /// 设置结束任务
 /// @param completion 上述任务执行完毕后执行的的结束任务
-- (void)setCompletion:(dispatch_block_t _Nullable)completion;
+- (void)setCompletion:(dispatch_block_t _Nonnull)completion;
 /// 开始执行
 - (void)run;
 /// 结束任务，未执行的任务不再执行
