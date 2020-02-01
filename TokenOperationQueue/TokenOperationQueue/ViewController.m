@@ -22,48 +22,99 @@
     TokenOperationQueue
     .sharedQueue
     .chain_runOperation(^{
+        NSLog(@"1s");
         sleep(1);
-        NSLog(@"1");
+        NSLog(@"1e");
     })
     .chain_runOperation(^{
+        NSLog(@"2s");
         sleep(2);
-        NSLog(@"2");
+        NSLog(@"2e");
     })
     .chain_runOperation(^{
+        NSLog(@"3s");
         sleep(3);
-        NSLog(@"3");
+        NSLog(@"3e");
     })
     .chain_runOperation(^{
+        NSLog(@"4s");
         sleep(3);
-        NSLog(@"4");
+        NSLog(@"4e");
     })
     .chain_runOperation(^{
+        NSLog(@"5s");
         sleep(2);
-        NSLog(@"5");
+        NSLog(@"5e");
     })
     .chain_runOperation(^{
+        NSLog(@"6s");
         sleep(1);
-        NSLog(@"6");
+        NSLog(@"6e");
     });
 }
 
 - (void)runOperationWithPriority {
     TokenOperationQueue
     .sharedQueue
-    .chain_runOperationWithPriority(TokenQueuePriorityHigh, ^{
-        sleep(1);
-        NSLog(@"1");
+    .chain_runOperationWithPriority(TokenQueuePriorityBackground, ^{
+        NSLog(@"1s");
+        sleep(3);
+        NSLog(@"1e");
     })
     .chain_runOperationWithPriority(TokenQueuePriorityBackground, ^{
-        sleep(2);
-        NSLog(@"2");
+        NSLog(@"1s");
+        sleep(3);
+        NSLog(@"1e");
+    })
+    .chain_runOperationWithPriority(TokenQueuePriorityBackground, ^{
+        NSLog(@"1s");
+        sleep(3);
+        NSLog(@"1e");
     })
     .chain_runOperationWithPriority(TokenQueuePriorityLow, ^{
-        sleep(2);
-        NSLog(@"3");
+        NSLog(@"2s");
+        sleep(5);
+        NSLog(@"2e");
+    })
+    .chain_runOperationWithPriority(TokenQueuePriorityLow, ^{
+        NSLog(@"2s");
+        sleep(5);
+        NSLog(@"2e");
+    })
+    .chain_runOperationWithPriority(TokenQueuePriorityLow, ^{
+        NSLog(@"2s");
+        sleep(5);
+        NSLog(@"2e");
     })
     .chain_runOperationWithPriority(TokenQueuePriorityDefault, ^{
-        NSLog(@"4");
+        NSLog(@"3s");
+        sleep(1);
+        NSLog(@"3e");
+    })
+    .chain_runOperationWithPriority(TokenQueuePriorityDefault, ^{
+        NSLog(@"3s");
+        sleep(1);
+        NSLog(@"3e");
+    })
+    .chain_runOperationWithPriority(TokenQueuePriorityDefault, ^{
+        NSLog(@"3s");
+        sleep(1);
+        NSLog(@"3e");
+    })
+    .chain_runOperationWithPriority(TokenQueuePriorityHigh, ^{
+        NSLog(@"4s");
+        sleep(1);
+        NSLog(@"4e");
+    })
+    .chain_runOperationWithPriority(TokenQueuePriorityHigh, ^{
+        NSLog(@"4s");
+        sleep(1);
+        NSLog(@"4e");
+    })
+    .chain_runOperationWithPriority(TokenQueuePriorityHigh, ^{
+        NSLog(@"4s");
+        sleep(1);
+        NSLog(@"4e");
     });
 }
 
@@ -72,35 +123,40 @@
     .sharedQueue
     .chain_setMaxConcurrent(1)
     .chain_runOperation(^{
+        NSLog(@"1s");
         sleep(1);
-        NSLog(@"1");
+        NSLog(@"1e");
     })
     .chain_runOperation(^{
+        NSLog(@"2s");
         sleep(2);
-        NSLog(@"2");
+        NSLog(@"2e");
     })
     .chain_runOperation(^{
+        NSLog(@"3s");
         sleep(3);
-        NSLog(@"3");
+        NSLog(@"3e");
     })
     .chain_runOperation(^{
+        NSLog(@"4s");
         sleep(3);
-        NSLog(@"4");
+        NSLog(@"4e");
     })
     .chain_runOperation(^{
+        NSLog(@"5s");
         sleep(2);
-        NSLog(@"5");
+        NSLog(@"5e");
     })
     .chain_runOperation(^{
+        NSLog(@"6s");
         sleep(1);
-        NSLog(@"6");
+        NSLog(@"6e");
     });
 }
 
 - (void)waitUntilFinished {
     TokenOperationQueue
     .sharedQueue
-    .chain_setMaxConcurrent(5)
     .chain_runOperation(^{
         sleep(6);
         NSLog(@"1");
