@@ -32,23 +32,28 @@
 /// 标记任务取消，一旦开发者在任务运行的过程中调用cancel，后面的任务就不执行了
 @property (nonatomic, assign) BOOL canceled;
 
+/// 标记开发者使用的sharedQueue还是queue
+@property (nonatomic, assign) BOOL isSerial;
+
 @end
 
 @implementation TokenOperationQueue
 
-+(instancetype)sharedQueue{
++ (instancetype)sharedQueue {
     static TokenOperationQueue *obj;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSUInteger defaultNumber = NSProcessInfo.processInfo.activeProcessorCount*2;
         obj = [[TokenOperationQueue alloc] initWithMaxConcurrent:defaultNumber];
+        obj.isSerial = NO;
     });
     return obj;
 }
 
-+ (instancetype)queue {
-    NSUInteger defaultNumber = NSProcessInfo.processInfo.activeProcessorCount*2;
-    return [[self alloc] initWithMaxConcurrent:defaultNumber];
++ (instancetype)serialQueue {
+    TokenOperationQueue *queue = [[self alloc] initWithMaxConcurrent:1];
+    queue.isSerial = YES;
+    return queue;
 }
 
 -(instancetype)initWithMaxConcurrent:(NSUInteger)maxConcurrent{
@@ -81,6 +86,10 @@
         withPriority:(TokenQueuePriority)priority {
     NSAssert(operation, @"operation cannot be nil, please check your code");
     if (!operation) {
+        return;
+    }
+    NSAssert(!(self.isSerial && priority != TokenQueuePriorityDefault), @"serialQueue cannot use this API");
+    if (self.isSerial && priority != TokenQueuePriorityDefault) {
         return;
     }
     /// 任务即将被添加到serialQueue，进组
@@ -237,6 +246,14 @@
 #pragma mark - setter
 
 - (void)setMaxConcurrent:(NSUInteger)maxConcurrent {
+    NSAssert(!self.isSerial, @"serial cannot use this API");
+    if (self.isSerial) {
+        return;
+    }
+    NSAssert(maxConcurrent >= 2, @"maxConcurrent must >= 2");
+    if (maxConcurrent < 2) {
+        return;
+    }
     [self lock];
         __block NSInteger diff = self.maxConcurrent - maxConcurrent;
         /// 下面这一行不要写self.maxConcurrent = maxConcurrent; 会出事的

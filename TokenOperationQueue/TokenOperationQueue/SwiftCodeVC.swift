@@ -31,21 +31,4 @@ class SwiftCodeVC: UIViewController {
             })
             .chain_waitUntilFinished()
     }
-
-    func two() {
-        _ = TokenOperationQueue(maxConcurrent: 6)
-            .chain_runOperation({
-                print("1")
-            })
-            .chain_runOperation({
-                print("2")
-            })
-            .chain_runOperation({
-                print("3")
-            })
-            .chain_runOperation({
-                print("4")
-            })
-            .chain_waitUntilFinished()
-    }
 }

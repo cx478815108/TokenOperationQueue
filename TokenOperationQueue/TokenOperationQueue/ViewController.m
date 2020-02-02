@@ -13,7 +13,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self groupCancel];
+    [self cancelAllOperations];
 }
 
 #pragma mark - queue
@@ -21,6 +21,7 @@
 - (void)runOperation {
     TokenOperationQueue
     .sharedQueue
+    .chain_setMaxConcurrent(2)
     .chain_runOperation(^{
         NSLog(@"1s");
         sleep(1);
@@ -199,8 +200,12 @@
 
 - (void)cancelAllOperations {
     __block TokenOperationQueue *queue = TokenOperationQueue
-    .queue
-    .chain_setMaxConcurrent(1)
+    .serialQueue
+    .chain_runOperationWithPriority(TokenQueuePriorityBackground, ^{
+        NSLog(@"1s");
+        sleep(3);
+        NSLog(@"1e");
+    })
     .chain_runOperation(^{
         NSLog(@"1s");
         sleep(2);
