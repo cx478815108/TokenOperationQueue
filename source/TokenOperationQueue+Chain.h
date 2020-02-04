@@ -19,9 +19,10 @@ typedef TokenOperationQueue* _Nonnull (^TokenOperationUIntegerBlock) (NSUInteger
 
 @property(nonatomic ,copy ,readonly, nonnull) TokenOperationChain1Block     chain_runOperation;
 @property(nonatomic ,copy ,readonly, nonnull) TokenOperationChain2Block     chain_runOperationWithPriority; /// 仅并发队列可用
-@property(nonatomic ,copy ,readonly, nonnull) TokenOperationChain0Block     chain_waitUntilFinished;
+@property(nonatomic ,copy ,readonly, nonnull) dispatch_block_t     chain_waitUntilFinished;
 @property(nonatomic ,copy ,readonly, nonnull) TokenOperationChain0Block     chain_cancelAllOperations;
 @property(nonatomic ,copy ,readonly, nonnull) TokenOperationUIntegerBlock   chain_setMaxConcurrent; /// 仅并发队列可用
+@property (nonatomic, copy, readonly, nonnull) dispatch_block_t chain_finish;
 
 @end
 

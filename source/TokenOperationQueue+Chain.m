@@ -24,10 +24,9 @@
     };
 }
 
-- (TokenOperationChain0Block _Nonnull)chain_waitUntilFinished {
-    return ^TokenOperationQueue *(void) {
+- (dispatch_block_t _Nonnull)chain_waitUntilFinished {
+    return ^(void) {
         [self waitUntilFinished];
-        return self;
     };
 }
 
@@ -43,6 +42,10 @@
         [self setMaxConcurrent:maxConcurrent];
         return self;
     };
+}
+
+- (dispatch_block_t _Nonnull)chain_finish {
+    return ^(void) {};
 }
 
 @end

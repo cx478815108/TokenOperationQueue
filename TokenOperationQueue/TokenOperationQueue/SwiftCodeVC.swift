@@ -14,7 +14,7 @@ class SwiftCodeVC: UIViewController {
     }
 
     func one() {
-        _ = TokenOperationQueue
+        TokenOperationQueue
             .shared()
             .chain_setMaxConcurrent(3)
             .chain_runOperation({
@@ -29,6 +29,6 @@ class SwiftCodeVC: UIViewController {
             .chain_runOperation({
                 print("4")
             })
-            .chain_waitUntilFinished()
+            .chain_finish()
     }
 }

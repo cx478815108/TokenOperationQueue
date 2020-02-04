@@ -178,22 +178,6 @@
         sleep(1);
         NSLog(@"5");
     })
-    .chain_waitUntilFinished()
-    .chain_runOperation(^{
-        NSLog(@"6");
-    })
-    .chain_runOperation(^{
-        NSLog(@"7");
-    })
-    .chain_runOperation(^{
-        sleep(5);
-        NSLog(@"8");
-    })
-    .chain_waitUntilFinished()
-    .chain_runOperation(^{
-        sleep(5);
-        NSLog(@"9");
-    })
     .chain_waitUntilFinished();
     NSLog(@"done");
 }
