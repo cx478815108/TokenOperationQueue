@@ -9,12 +9,14 @@
 #ifndef TokenOperationHeader_h
 #define TokenOperationHeader_h
 
-#import "TokenOperationGroup.h"
 #import "TokenOperationGroup+Chain.h"
+#import "TokenOperationGroup.h"
 #import "TokenOperationQueue+Chain.h"
 #import "TokenOperationQueue.h"
 #import "TokenOperationTool.h"
 #import "TokenRenderQueue.h"
 #import "TokenSemaphore.h"
+#import "TokenSerialQueue+Chain.h"
+#import "TokenSerialQueue.h"
 
 #endif /* TokenOperationHeader_h */

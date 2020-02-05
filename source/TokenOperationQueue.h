@@ -24,8 +24,6 @@ typedef NS_ENUM(long, TokenQueuePriority) {
 + (instancetype _Nonnull)new NS_UNAVAILABLE;
 /// 获取全局并发队列单例 最大并发数和cpu相关
 + (instancetype _Nonnull)sharedQueue;
-/// 获取串行queue，并非单例，所有任务执行完毕该对象释放
-+ (instancetype _Nonnull)serialQueue;
 /// 以默认优先级执行任务
 /// @param operation 任务
 - (void)runOperation:(dispatch_block_t _Nonnull)operation;

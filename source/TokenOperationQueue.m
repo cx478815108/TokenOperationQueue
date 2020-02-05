@@ -32,9 +32,6 @@
 /// 标记任务取消，一旦开发者在任务运行的过程中调用cancel，后面的任务就不执行了
 @property (nonatomic, assign) BOOL canceled;
 
-/// 标记开发者使用的sharedQueue还是queue
-@property (nonatomic, assign) BOOL isSerial;
-
 @end
 
 @implementation TokenOperationQueue
@@ -43,20 +40,13 @@
     static TokenOperationQueue *obj;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSUInteger defaultNumber = NSProcessInfo.processInfo.activeProcessorCount*2;
+        NSUInteger defaultNumber = NSProcessInfo.processInfo.activeProcessorCount * 2;
         obj = [[TokenOperationQueue alloc] initWithMaxConcurrent:defaultNumber];
-        obj.isSerial = NO;
     });
     return obj;
 }
 
-+ (instancetype)serialQueue {
-    TokenOperationQueue *queue = [[self alloc] initWithMaxConcurrent:1];
-    queue.isSerial = YES;
-    return queue;
-}
-
--(instancetype)initWithMaxConcurrent:(NSUInteger)maxConcurrent{
+- (instancetype)initWithMaxConcurrent:(NSUInteger)maxConcurrent {
     if (self = [super init]) {
         /// 初始化多线程读写保护专用锁
         pthread_mutexattr_t attr;
@@ -78,7 +68,7 @@
     pthread_mutex_destroy(&_mutexLock);
 }
 
--(void)runOperation:(dispatch_block_t _Nonnull)operation{
+- (void)runOperation:(dispatch_block_t _Nonnull)operation {
     [self runOperation:operation withPriority:TokenQueuePriorityDefault];
 }
 
@@ -86,10 +76,6 @@
         withPriority:(TokenQueuePriority)priority {
     NSAssert(operation, @"operation cannot be nil, please check your code");
     if (!operation) {
-        return;
-    }
-    NSAssert(!(self.isSerial && priority != TokenQueuePriorityDefault), @"serialQueue cannot use this API");
-    if (self.isSerial && priority != TokenQueuePriorityDefault) {
         return;
     }
     /// 任务即将被添加到serialQueue，进组
@@ -124,27 +110,6 @@
 
 /// 尝试取出队列中的一个任务并且执行
 - (void)execute {
-    [self lock];
-        NSUInteger maxConcurrent = self.maxConcurrent;
-    [self unlock];
-
-    /// 开发者设置串行执行
-    if (maxConcurrent == 1) {
-        dispatch_block_t operation = [self locked_popOperation];
-        if (operation) {
-            /// 所有的添加到serialQueue的task会依次执行
-            dispatch_async(self.serialQueue, ^{
-                if (!self.canceled) {
-                    operation();
-                }
-                /// 任务执行完毕，出组
-                dispatch_group_leave(self.operationsGroup);
-                [self execute];
-            });
-        }
-        return;
-    }
-
     /// 此处用serialQueue是保障task不会阻塞，并且保障其他会在serialQueue设置必备参数的任务执行完毕（不要改成sync，会出事的）
     dispatch_async(self.serialQueue, ^{
         /// 取出和执行任务需要等待信号量
@@ -246,10 +211,6 @@
 #pragma mark - setter
 
 - (void)setMaxConcurrent:(NSUInteger)maxConcurrent {
-    NSAssert(!self.isSerial, @"serial cannot use this API");
-    if (self.isSerial) {
-        return;
-    }
     NSAssert(maxConcurrent >= 2, @"maxConcurrent must >= 2");
     if (maxConcurrent < 2) {
         return;

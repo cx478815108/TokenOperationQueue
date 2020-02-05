@@ -10,10 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupChain0Block) (void);
-typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupChain1Block) (dispatch_block_t _Nonnull operation);
-typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupChain2Block) (NSOperationQueuePriority priority, dispatch_block_t _Nonnull operation);
-typedef TokenOperationGroup* _Nonnull (^TokenOperationGroupUIntegerBlock) (NSUInteger maxConcurrent);
+typedef TokenOperationGroup * _Nonnull (^TokenOperationGroupChain0Block) (void);
+typedef TokenOperationGroup * _Nonnull (^TokenOperationGroupChain1Block) (dispatch_block_t _Nonnull operation);
+typedef TokenOperationGroup * _Nonnull (^TokenOperationGroupChain2Block) (NSOperationQueuePriority priority, dispatch_block_t _Nonnull operation);
+typedef TokenOperationGroup * _Nonnull (^TokenOperationGroupUIntegerBlock) (NSUInteger maxConcurrent);
 
 @interface TokenOperationGroup (Chain)
 

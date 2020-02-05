@@ -10,6 +10,13 @@
 
 @implementation TokenOperationQueue (Chain)
 
+- (TokenOperationUIntegerBlock _Nonnull)chain_setMaxConcurrent {
+    return ^TokenOperationQueue *(NSUInteger maxConcurrent) {
+        [self setMaxConcurrent:maxConcurrent];
+        return self;
+    };
+}
+
 - (TokenOperationChain1Block _Nonnull)chain_runOperation {
     return ^TokenOperationQueue *(dispatch_block_t _Nonnull operation) {
         [self runOperation:operation];
@@ -30,17 +37,9 @@
     };
 }
 
-- (TokenOperationChain0Block _Nonnull)chain_cancelAllOperations {
-    return ^TokenOperationQueue *(void) {
+- (dispatch_block_t _Nonnull)chain_cancelAllOperations {
+    return ^(void) {
         [self cancelAllOperations];
-        return self;
-    };
-}
-
-- (TokenOperationUIntegerBlock _Nonnull)chain_setMaxConcurrent {
-    return ^TokenOperationQueue *(NSUInteger maxConcurrent) {
-        [self setMaxConcurrent:maxConcurrent];
-        return self;
     };
 }
 

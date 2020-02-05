@@ -13,7 +13,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self cancelAllOperations];
+    [self serialQueue];
 }
 
 #pragma mark - queue
@@ -184,7 +184,8 @@
 
 - (void)cancelAllOperations {
     __block TokenOperationQueue *queue = TokenOperationQueue
-    .serialQueue
+    .sharedQueue
+    .chain_setMaxConcurrent(2)
     .chain_runOperationWithPriority(TokenQueuePriorityBackground, ^{
         NSLog(@"1s");
         sleep(3);
@@ -215,7 +216,7 @@
         sleep(2);
         NSLog(@"5e");
     });
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"ready to cancel");
         queue.chain_cancelAllOperations();
         NSLog(@"canceled");
@@ -310,6 +311,37 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"ready to cancel");
         group.chain_cancel();
+        NSLog(@"canceled");
+    });
+}
+
+#pragma mark - serialQueue
+
+- (void)serialQueue {
+    TokenSerialQueue *queue = TokenSerialQueue.queue;
+    [queue runOperation:^{
+        NSLog(@"1s");
+        sleep(1);
+        NSLog(@"1e");
+    }];
+    [queue runOperation:^{
+        NSLog(@"2s");
+        sleep(1);
+        NSLog(@"2e");
+    }];
+    [queue runOperation:^{
+        NSLog(@"3s");
+        sleep(1);
+        NSLog(@"3e");
+    }];
+    [queue runOperation:^{
+        NSLog(@"4s");
+        sleep(1);
+        NSLog(@"4e");
+    }];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"ready to cancel");
+        [queue stop];
         NSLog(@"canceled");
     });
 }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC280CC823EAD099004E58B5 /* TokenSerialQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = BC280CC723EAD099004E58B5 /* TokenSerialQueue.m */; };
+		BC28299B23EB036C004E58B5 /* TokenSerialQueue+Chain.m in Sources */ = {isa = PBXBuildFile; fileRef = BC28299A23EB036C004E58B5 /* TokenSerialQueue+Chain.m */; };
 		BC69625A23E45E7C00614AD2 /* SwiftCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC69625923E45E7C00614AD2 /* SwiftCodeVC.swift */; };
 		BC9B394323DC96810083F2F0 /* TokenSemaphore.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9B394223DC96810083F2F0 /* TokenSemaphore.m */; };
 		BC9B3BAE23DC982F0083F2F0 /* TokenOperationTool.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9B3BAD23DC982F0083F2F0 /* TokenOperationTool.m */; };
@@ -24,6 +26,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BC280CC623EAD099004E58B5 /* TokenSerialQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenSerialQueue.h; sourceTree = "<group>"; };
+		BC280CC723EAD099004E58B5 /* TokenSerialQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenSerialQueue.m; sourceTree = "<group>"; };
+		BC28299923EB036C004E58B5 /* TokenSerialQueue+Chain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TokenSerialQueue+Chain.h"; sourceTree = "<group>"; };
+		BC28299A23EB036C004E58B5 /* TokenSerialQueue+Chain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TokenSerialQueue+Chain.m"; sourceTree = "<group>"; };
 		BC69625823E45E7B00614AD2 /* TokenOperationQueue-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TokenOperationQueue-Bridging-Header.h"; sourceTree = "<group>"; };
 		BC69625923E45E7C00614AD2 /* SwiftCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftCodeVC.swift; sourceTree = "<group>"; };
 		BC9B394123DC96810083F2F0 /* TokenSemaphore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenSemaphore.h; sourceTree = "<group>"; };
@@ -117,6 +123,10 @@
 				BC9B3BB023DC98FC0083F2F0 /* TokenRenderQueue.m */,
 				BC9B394123DC96810083F2F0 /* TokenSemaphore.h */,
 				BC9B394223DC96810083F2F0 /* TokenSemaphore.m */,
+				BC280CC623EAD099004E58B5 /* TokenSerialQueue.h */,
+				BC280CC723EAD099004E58B5 /* TokenSerialQueue.m */,
+				BC28299923EB036C004E58B5 /* TokenSerialQueue+Chain.h */,
+				BC28299A23EB036C004E58B5 /* TokenSerialQueue+Chain.m */,
 			);
 			name = source;
 			path = ../source;
@@ -196,7 +206,9 @@
 				BCB2DFB322D2400600786463 /* ViewController.m in Sources */,
 				BCFABDA123DCA0D900FC88CB /* TokenOperationQueue+Chain.m in Sources */,
 				BCFABD9E23DC9FEB00FC88CB /* TokenOperationGroup+Chain.m in Sources */,
+				BC280CC823EAD099004E58B5 /* TokenSerialQueue.m in Sources */,
 				BC69625A23E45E7C00614AD2 /* SwiftCodeVC.swift in Sources */,
+				BC28299B23EB036C004E58B5 /* TokenSerialQueue+Chain.m in Sources */,
 				BC9B3BAE23DC982F0083F2F0 /* TokenOperationTool.m in Sources */,
 				BCB2DFBE22D2400700786463 /* main.m in Sources */,
 				BCB2DFB022D2400600786463 /* AppDelegate.m in Sources */,
