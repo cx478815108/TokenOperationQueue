@@ -32,18 +32,14 @@ $ pod install
 ## Architecture
 
 - TokenOperationGroup
-
 - - TokenOperationGroup+Chain
-
 - TokenOperationQueue
-
 - - TokenOperationQueue+Chain
-
 - TokenOperationTool
-
 - TokenRenderQueue
-
 - TokenSemaphore
+- TokenSerialQueue
+  - TokenSerialQueue+Chain
 
 ### TokenOperationGroup
 
@@ -51,9 +47,13 @@ a group tasks solution based on NSOperationQueue
 
 ### TokenOperationQueue
 
-A GCD wrapper that allow you set the max number of concurrent. So easy to use!
+A global concurrent queue(GCD wrapper) that allow you set the max number of concurrent (max count must >= 2)
 
-You can also run operation serially.
+TokenOperationQueue can blocks execution of the current thread until the operation object finishes its task by queue.chain_waitUntilFinished()
+
+TokenOperationQueue can cancel operations witch are not running by queue.chain_cancelAllOperations
+
+So easy to use!
 
 ### TokenOperationTool
 
@@ -62,6 +62,10 @@ Some useful tools.
 ### TokenSemaphore
 
 dispatch_semaphore_t wrapper that allow you use semaphore elegantly.
+
+### TokenSerialQueue
+
+A DISPATCH_QUEUE_SERIAL wrapper that allow you blocks execution of the current thread until the operation object finishes its task or stop operations witch are not running.
 
 ## Usage
 
@@ -109,18 +113,18 @@ TokenOperationQueue
 Output
 
 ```
-**1s**
-**3s**
-**2s**
-**4s**
-**5s**
-**6s**
-**1e**
-**6e**
-**5e**
-**2e**
-**4e**
-**3e**
+1s
+3s
+2s
+4s
+5s
+6s
+1e
+6e
+5e
+2e
+4e
+3e
 ```
 
 #### run operation concurrently with priority
@@ -195,87 +199,30 @@ TokenOperationQueue
 Output
 
 ```
-**4s**
-**4s**
-**4s**
-**4e**
-**4e**
-**4e**
-**3s**
-**3s**
-**3s**
-**3e**
-**3e**
-**3e**
-**2s**
-**2s**
-**2s**
-**2e**
-**2e**
-**2e**
-**1s**
-**1s**
-**1s**
-**1e**
-**1e**
-**1e**
-```
-
-#### changeMaxConcurrent
-
-Code
-
-```
-TokenOperationQueue
-  .sharedQueue
-  .chain_setMaxConcurrent(1)
-  .chain_runOperation(^{
-    NSLog(@"1s");
-    sleep(1);
-    NSLog(@"1e");
-  })
-  .chain_runOperation(^{
-    NSLog(@"2s");
-    sleep(2);
-    NSLog(@"2e");
-  })
-  .chain_runOperation(^{
-    NSLog(@"3s");
-    sleep(3);
-    NSLog(@"3e");
-  })
-  .chain_runOperation(^{
-    NSLog(@"4s");
-    sleep(3);
-    NSLog(@"4e");
-  })
-  .chain_runOperation(^{
-    NSLog(@"5s");
-    sleep(2);
-    NSLog(@"5e");
-  })
-  .chain_runOperation(^{
-    NSLog(@"6s");
-    sleep(1);
-    NSLog(@"6e");
-  });
-```
-
-Output
-
-```
-**1s**
-**1e**
-**2s**
-**2e**
-**3s**
-**3e**
-**4s**
-**4e**
-**5s**
-**5e**
-**6s**
-**6e**
+4s
+4s
+4s
+4e
+4e
+4e
+3s
+3s
+3s
+3e
+3e
+3e
+2s
+2s
+2s
+2e
+2e
+2e
+1s
+1s
+1s
+1e
+1e
+1e
 ```
 
 #### waitUntilFinished
@@ -305,22 +252,6 @@ TokenOperationQueue
     sleep(1);
     NSLog(@"5");
   })
-  .chain_waitUntilFinished()
-  .chain_runOperation(^{
-    NSLog(@"6");
-  })
-  .chain_runOperation(^{
-    NSLog(@"7");
-  })
-  .chain_runOperation(^{
-    sleep(5);
-    NSLog(@"8");
-  })
-  .chain_waitUntilFinished()
-  .chain_runOperation(^{
-    sleep(5);
-    NSLog(@"9");
-  })
   .chain_waitUntilFinished();
   NSLog(@"done");
 ```
@@ -328,16 +259,12 @@ TokenOperationQueue
 Output
 
 ```
-**4**
-**5**
-**3**
-**2**
-**1**
-**6**
-**7**
-**8**
-**9**
-**done**
+4
+5
+3
+2
+1
+done
 ```
 
 #### cancelAllOperations
@@ -346,53 +273,54 @@ Code
 
 ```
 __block TokenOperationQueue *queue = TokenOperationQueue
-  .queue
-  .chain_setMaxConcurrent(1)
-  .chain_runOperation(^{
-    NSLog(@"1s");
-    sleep(2);
-    NSLog(@"1e");
-  })
-  .chain_runOperation(^{
-    NSLog(@"2s");
-    sleep(2);
-    NSLog(@"2e");
-  })
-  .chain_runOperation(^{
-    NSLog(@"3s");
-    sleep(2);
-    NSLog(@"3e");
-  })
-  .chain_runOperation(^{
-    NSLog(@"4s");
-    sleep(2);
-    NSLog(@"4e");
-  })
-  .chain_runOperation(^{
-    NSLog(@"5s");
-    sleep(2);
-    NSLog(@"5e");
-  });
-  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-    NSLog(@"ready to cancel");
-    queue.chain_cancelAllOperations();
-    NSLog(@"canceled");
-  });
-  NSLog(@"done");
+    .sharedQueue
+    .chain_setMaxConcurrent(2)
+    .chain_runOperationWithPriority(TokenQueuePriorityBackground, ^{
+        NSLog(@"1s");
+        sleep(3);
+        NSLog(@"1e");
+    })
+    .chain_runOperation(^{
+        NSLog(@"1s");
+        sleep(2);
+        NSLog(@"1e");
+    })
+    .chain_runOperation(^{
+        NSLog(@"2s");
+        sleep(2);
+        NSLog(@"2e");
+    })
+    .chain_runOperation(^{
+        NSLog(@"3s");
+        sleep(2);
+        NSLog(@"3e");
+    })
+    .chain_runOperation(^{
+        NSLog(@"4s");
+        sleep(2);
+        NSLog(@"4e");
+    })
+    .chain_runOperation(^{
+        NSLog(@"5s");
+        sleep(2);
+        NSLog(@"5e");
+    });
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"ready to cancel");
+        queue.chain_cancelAllOperations();
+        NSLog(@"canceled");
+    });
 ```
 
 Output
 
 ```
-**1s**
-**done**
-**1e**
-**2s**
-**2e**
-**3s**
-**ready to cancel**
-**canceled**
-**3e**
+1s
+2s
+ready to cancel
+canceled
+1e
+2e
 ```
 
 ### Group
@@ -428,12 +356,12 @@ TokenOperationGroup
 Output
 
 ```
-**1s**
-**2**
-**3**
-**4**
-**1e**
-**done**
+1s
+2
+3
+4
+1e
+done
 ```
 
 #### groupWithPriority
@@ -468,12 +396,12 @@ TokenOperationGroup
 Output
 
 ```
-**4**
-**5**
-**2**
-**3**
-**1**
-**done**
+4
+5
+2
+3
+1
+done
 ```
 
 #### groupCancel
@@ -481,7 +409,7 @@ Output
 Code
 
 ```
-**__block** TokenOperationGroup *group = TokenOperationGroup
+__block TokenOperationGroup *group = TokenOperationGroup
   .group
   .chain_setMaxConcurrent(1)
   .chain_addOperation(^{
@@ -523,12 +451,12 @@ Code
 Output
 
 ```
-**1s**
-**1e**
-**2s**
-**2e**
-**3s**
-**ready to cancel**
-**canceled**
-**3e**
+1s
+1e
+2s
+2e
+3s
+ready to cancel
+canceled
+3e
 ```

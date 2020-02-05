@@ -13,7 +13,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self serialQueue];
+    [self cancelAllOperations];
 }
 
 #pragma mark - queue
@@ -216,12 +216,11 @@
         sleep(2);
         NSLog(@"5e");
     });
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"ready to cancel");
         queue.chain_cancelAllOperations();
         NSLog(@"canceled");
     });
-    NSLog(@"done");
 }
 
 #pragma mark - group

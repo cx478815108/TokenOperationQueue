@@ -29,4 +29,8 @@
     };
 }
 
+- (dispatch_block_t _Nonnull)chain_finish {
+    return ^(void) {};
+}
+
 @end

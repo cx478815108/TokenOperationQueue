@@ -14,9 +14,10 @@ typedef TokenSerialQueue * _Nonnull (^TokenSerialChain0Block) (dispatch_block_t 
 
 @interface TokenSerialQueue (Chain)
 
-@property(nonatomic, copy, readonly, nonnull) TokenSerialChain0Block    chain_runOperation;
-@property(nonatomic, copy, readonly, nonnull) dispatch_block_t          chain_waitUntilFinished;
-@property(nonatomic, copy, readonly, nonnull) dispatch_block_t          chain_stop;
+@property (nonatomic, copy, readonly, nonnull) TokenSerialChain0Block   chain_runOperation;
+@property (nonatomic, copy, readonly, nonnull) dispatch_block_t         chain_waitUntilFinished;
+@property (nonatomic, copy, readonly, nonnull) dispatch_block_t         chain_stop;
+@property (nonatomic, copy, readonly, nonnull) dispatch_block_t         chain_finish;
 
 @end
 
