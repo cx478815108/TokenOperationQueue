@@ -272,7 +272,7 @@ done
 Code
 
 ```
-__block TokenOperationQueue *queue = TokenOperationQueue
+TokenOperationQueue *queue = TokenOperationQueue
     .sharedQueue
     .chain_setMaxConcurrent(2)
     .chain_runOperationWithPriority(TokenQueuePriorityBackground, ^{
@@ -409,7 +409,7 @@ done
 Code
 
 ```
-__block TokenOperationGroup *group = TokenOperationGroup
+TokenOperationGroup *group = TokenOperationGroup
   .group
   .chain_setMaxConcurrent(1)
   .chain_addOperation(^{
