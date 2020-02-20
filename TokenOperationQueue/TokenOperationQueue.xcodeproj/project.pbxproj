@@ -11,7 +11,6 @@
 		BC28299B23EB036C004E58B5 /* TokenSerialQueue+Chain.m in Sources */ = {isa = PBXBuildFile; fileRef = BC28299A23EB036C004E58B5 /* TokenSerialQueue+Chain.m */; };
 		BC69625A23E45E7C00614AD2 /* SwiftCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC69625923E45E7C00614AD2 /* SwiftCodeVC.swift */; };
 		BC9B394323DC96810083F2F0 /* TokenSemaphore.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9B394223DC96810083F2F0 /* TokenSemaphore.m */; };
-		BC9B3BAE23DC982F0083F2F0 /* TokenOperationTool.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9B3BAD23DC982F0083F2F0 /* TokenOperationTool.m */; };
 		BC9B3BB623DC9EB80083F2F0 /* TokenOperationGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9B3BB523DC9EB80083F2F0 /* TokenOperationGroup.m */; };
 		BCB2DFB022D2400600786463 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB2DFAF22D2400600786463 /* AppDelegate.m */; };
 		BCB2DFB322D2400600786463 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB2DFB222D2400600786463 /* ViewController.m */; };
@@ -34,8 +33,6 @@
 		BC9B394123DC96810083F2F0 /* TokenSemaphore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenSemaphore.h; sourceTree = "<group>"; };
 		BC9B394223DC96810083F2F0 /* TokenSemaphore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenSemaphore.m; sourceTree = "<group>"; };
 		BC9B394423DC97030083F2F0 /* TokenOperationHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenOperationHeader.h; sourceTree = "<group>"; };
-		BC9B3BAC23DC982F0083F2F0 /* TokenOperationTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenOperationTool.h; sourceTree = "<group>"; };
-		BC9B3BAD23DC982F0083F2F0 /* TokenOperationTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenOperationTool.m; sourceTree = "<group>"; };
 		BC9B3BB423DC9EB80083F2F0 /* TokenOperationGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenOperationGroup.h; sourceTree = "<group>"; };
 		BC9B3BB523DC9EB80083F2F0 /* TokenOperationGroup.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenOperationGroup.m; sourceTree = "<group>"; };
 		BCB2DFAB22D2400600786463 /* TokenOperationQueue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TokenOperationQueue.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,8 +111,6 @@
 				BCB2DFC822D2407500786463 /* TokenOperationQueue.m */,
 				BCFABD9F23DCA0D900FC88CB /* TokenOperationQueue+Chain.h */,
 				BCFABDA023DCA0D900FC88CB /* TokenOperationQueue+Chain.m */,
-				BC9B3BAC23DC982F0083F2F0 /* TokenOperationTool.h */,
-				BC9B3BAD23DC982F0083F2F0 /* TokenOperationTool.m */,
 				BC9B394123DC96810083F2F0 /* TokenSemaphore.h */,
 				BC9B394223DC96810083F2F0 /* TokenSemaphore.m */,
 				BC280CC623EAD099004E58B5 /* TokenSerialQueue.h */,
@@ -204,7 +199,6 @@
 				BC280CC823EAD099004E58B5 /* TokenSerialQueue.m in Sources */,
 				BC69625A23E45E7C00614AD2 /* SwiftCodeVC.swift in Sources */,
 				BC28299B23EB036C004E58B5 /* TokenSerialQueue+Chain.m in Sources */,
-				BC9B3BAE23DC982F0083F2F0 /* TokenOperationTool.m in Sources */,
 				BCB2DFBE22D2400700786463 /* main.m in Sources */,
 				BCB2DFB022D2400600786463 /* AppDelegate.m in Sources */,
 				BCB2DFC922D2407500786463 /* TokenOperationQueue.m in Sources */,
