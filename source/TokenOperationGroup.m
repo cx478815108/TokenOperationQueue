@@ -98,7 +98,7 @@
     [self lock];
         self.canceled = YES;
     [self unlock];
-    //wo do not to call dispatch_group_leave(self.operationsGroup);
+    //we do not to call dispatch_group_leave(self.operationsGroup);
 }
 
 - (void)lock {
@@ -182,35 +182,35 @@
 
 - (NSMutableArray <dispatch_block_t> *)veryHighOperations {
     if (!_veryHighOperations) {
-        _veryHighOperations = NSMutableArray.array;
+        _veryHighOperations = @[].mutableCopy;
     }
     return _veryHighOperations;
 }
 
 - (NSMutableArray <dispatch_block_t> *)highOperations {
     if (!_highOperations) {
-        _highOperations = NSMutableArray.array;
+        _highOperations = @[].mutableCopy;
     }
     return _highOperations;
 }
 
 - (NSMutableArray <dispatch_block_t> *)normalOperations {
     if (!_normalOperations) {
-        _normalOperations = NSMutableArray.array;
+        _normalOperations = @[].mutableCopy;
     }
     return _normalOperations;
 }
 
 - (NSMutableArray <dispatch_block_t> *)lowOperations {
     if (!_lowOperations) {
-        _lowOperations = NSMutableArray.array;
+        _lowOperations = @[].mutableCopy;
     }
     return _lowOperations;
 }
 
 - (NSMutableArray <dispatch_block_t> *)veryLowOperations {
     if (!_veryLowOperations) {
-        _veryLowOperations = NSMutableArray.array;
+        _veryLowOperations = @[].mutableCopy;
     }
     return _veryLowOperations;
 }

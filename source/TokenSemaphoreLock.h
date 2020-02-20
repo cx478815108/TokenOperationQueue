@@ -9,26 +9,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 信号量对象
-@interface TokenSemaphore : NSObject
+@interface TokenSemaphoreLock : NSObject
 
 + (instancetype _Nonnull)new NS_UNAVAILABLE;
 
 - (instancetype _Nonnull)init NS_UNAVAILABLE;
 
-/**
- 初始化信号量为0
- */
-+ (instancetype _Nonnull)waitSemaphore;
+/// 信号量锁
++ (instancetype _Nonnull)semaphoreLock;
 
-/**
- 初始化信号量为1
- */
-+ (instancetype _Nonnull)lockSemaphore;
+- (void)lock;
 
-- (void)wait;
-
-- (void)signal;
+- (void)unlock;
 
 @end
 

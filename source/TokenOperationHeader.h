@@ -12,11 +12,15 @@
 
 #import "TokenOperationGroup+Chain.h"
 #import "TokenOperationGroup.h"
+
 #import "TokenOperationQueue+Chain.h"
 #import "TokenOperationQueue.h"
+
 #import "TokenSerialQueue+Chain.h"
 #import "TokenSerialQueue.h"
-#import "TokenSemaphore.h"
+
+#import "TokenSemaphoreLock+Chain.h"
+#import "TokenSemaphoreLock.h"
 
 
 #endif /* TokenOperationHeader_h */
