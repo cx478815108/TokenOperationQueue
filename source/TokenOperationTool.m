@@ -7,7 +7,6 @@
 
 #import "TokenOperationQueue.h"
 #import "TokenOperationTool.h"
-#import "TokenRenderQueue.h"
 #import <stdatomic.h>
 #import <pthread.h>
 
@@ -23,14 +22,6 @@ void TokenOperationRunOnMainThread(dispatch_block_t _Nonnull operation) {
             operation();
         });
     }
-}
-
-void TokenTranscationCommit(dispatch_block_t _Nonnull operation) {
-    assert(operation);
-    if (!operation) {
-        return;
-    }
-    [[TokenRenderQueue sharedRenderQueue] addTask:operation];
 }
 
 void TokenDispatchApply(size_t count,

@@ -11,7 +11,6 @@
 #define TokenOperationTool_h
 
 void TokenOperationRunOnMainThread(dispatch_block_t _Nonnull operation);
-void TokenTranscationCommit(dispatch_block_t _Nonnull operation);
 void TokenDispatchApply(size_t count,
                         dispatch_queue_t _Nonnull queue,
                         NSUInteger threadCount,
