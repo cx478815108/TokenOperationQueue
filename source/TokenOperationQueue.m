@@ -1,10 +1,9 @@
-//
-//  TokenQueue.m
-//  TokenOperation
-//
-//  Created by 陈雄 on 2018/5/3.
-//  Copyright © 2018年 com.feelings. All rights reserved.
-//
+/**
+* Copyright (c) 2018-present, 陈雄 & 武嘉晟
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory
+*/
 
 #import "TokenOperationQueue.h"
 #import <pthread.h>

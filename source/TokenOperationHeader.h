@@ -1,11 +1,12 @@
+/**
+* Copyright (c) 2018-present, 陈雄 & 武嘉晟
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory
+*/
 //
 //  TokenOperationHeader.h
-//  TokenOperationQueue
-//
-//  Created by 武嘉晟 on 2020/1/25.
-//  Copyright © 2020 Token. All rights reserved.
-//
-
+ 
 #ifndef TokenOperationHeader_h
 #define TokenOperationHeader_h
 

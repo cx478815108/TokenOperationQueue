@@ -1,10 +1,9 @@
-//
-//  TokenOperationTool.m
-//  TokenOperationQueue
-//
-//  Created by 武嘉晟 on 2020/1/25.
-//  Copyright © 2020 Token. All rights reserved.
-//
+/**
+* Copyright (c) 2018-present, 陈雄 & 武嘉晟
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory
+*/
 
 #import "TokenOperationQueue.h"
 #import "TokenOperationTool.h"
