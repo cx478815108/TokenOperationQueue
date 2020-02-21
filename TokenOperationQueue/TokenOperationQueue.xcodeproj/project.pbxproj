@@ -105,11 +105,11 @@
 		BCB2DFC622D2407500786463 /* source */ = {
 			isa = PBXGroup;
 			children = (
-				BC9B394423DC97030083F2F0 /* TokenOperationHeader.h */,
 				BC9B3BB423DC9EB80083F2F0 /* TokenOperationGroup.h */,
 				BC9B3BB523DC9EB80083F2F0 /* TokenOperationGroup.m */,
 				BCFABD9C23DC9FEB00FC88CB /* TokenOperationGroup+Chain.h */,
 				BCFABD9D23DC9FEB00FC88CB /* TokenOperationGroup+Chain.m */,
+				BC9B394423DC97030083F2F0 /* TokenOperationHeader.h */,
 				BCB2DFC722D2407500786463 /* TokenOperationQueue.h */,
 				BCB2DFC822D2407500786463 /* TokenOperationQueue.m */,
 				BCFABD9F23DCA0D900FC88CB /* TokenOperationQueue+Chain.h */,

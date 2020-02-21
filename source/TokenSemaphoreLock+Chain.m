@@ -10,12 +10,14 @@
 @implementation TokenSemaphoreLock (Chain)
 
 - (TokenSemaphoreLockOperation)runLockOperation {
-    return ^(dispatch_block_t  _Nonnull operation) {
-        if (operation) {
-            [self lock];
-            operation();
-            [self unlock];
+    return ^(dispatch_block_t _Nonnull operation) {
+        NSAssert(operation, @"operation cannot be nil, please check your code");
+        if (!operation) {
+            return;
         }
+        [self lock];
+        operation();
+        [self unlock];
     };
 }
 @end
