@@ -16,7 +16,7 @@ To integrate TokenOperationQueue into your Xcode project using CocoaPods, specif
 
 ```
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '11.0'
+platform :ios, '10.0'
 
 target 'TargetName' do
 pod 'TokenOperationQueue'
@@ -35,9 +35,8 @@ $ pod install
 - - TokenOperationGroup+Chain
 - TokenOperationQueue
 - - TokenOperationQueue+Chain
-- TokenOperationTool
-- TokenRenderQueue
-- TokenSemaphore
+- TokenSemaphoreLock
+- - TokenSemaphoreLock+Chain
 - TokenSerialQueue
   - TokenSerialQueue+Chain
 
@@ -54,10 +53,6 @@ TokenOperationQueue can blocks execution of the current thread until the operati
 TokenOperationQueue can cancel operations witch are not running by queue.chain_cancelAllOperations
 
 So easy to use!
-
-### TokenOperationTool
-
-Some useful tools.
 
 ### TokenSemaphore
 
