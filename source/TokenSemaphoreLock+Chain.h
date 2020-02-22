@@ -9,10 +9,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^TokenSemaphoreLockOperation)(dispatch_block_t operation);
+typedef void(^TokenSemaphoreLockOperation)(dispatch_block_t _Nonnull operation);
 
 @interface TokenSemaphoreLock (Chain)
-@property (nonatomic, readonly, nonnull) TokenSemaphoreLockOperation runLockOperation;
+
+@property (nonatomic, copy, readonly, nonnull) TokenSemaphoreLockOperation runLockOperation;
+
 @end
 
 NS_ASSUME_NONNULL_END
