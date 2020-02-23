@@ -54,7 +54,7 @@ TokenOperationQueue can cancel operations witch are not running by queue.chain_c
 
 So easy to use!
 
-### TokenSemaphore
+### TokenSemaphoreLock
 
 dispatch_semaphore_t wrapper that allow you use semaphore elegantly.
 
