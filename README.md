@@ -60,7 +60,7 @@ dispatch_semaphore_t wrapper that allow you use semaphore elegantly.
 
 ### TokenSerialQueue
 
-A DISPATCH_QUEUE_SERIAL wrapper that allow you blocks execution of the current thread until the operation object finishes its task or stop operations witch are not running.
+A DISPATCH_QUEUE_SERIAL wrapper that allow you blocks execution of the current thread until the operation object finishes its task or stop operations whitch are not running.
 
 ## Usage
 
